@@ -4,16 +4,12 @@ horas = tempo_total // 3600
 minutos = ( tempo_total - (horas * 60) ) // 60
 segundos = tempo_total - (horas * 60) - (minutos * 60)
 
-print horas,minutos,segundos
-
 if segundos > 59:
 	minutos += 1
 	segundos = segundos - 59
 if minutos > 59:
 	horas += 1
 	minutos = minutos - 59
-
-print horas,minutos,segundos
 
 if len(str(horas)) == 1:
 	horas = '0'+str(horas)
