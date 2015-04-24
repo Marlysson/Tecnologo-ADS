@@ -1,4 +1,7 @@
-## Repositório com códigos do URI Judge Online
+## Repositório com códigos de algoritmos da matéria de Análise de Sistemas
 
-Aqui colocarei os exercícios que fiz do site de problemas URI Judge na linguagem [Python](https://www.python.org)
+Contém códigos do site URI Judge Online das categorias:
+1.Iniciantes
+
+E as respostas de códigos da aula.
 
