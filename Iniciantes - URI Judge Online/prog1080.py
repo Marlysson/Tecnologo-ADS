@@ -14,6 +14,9 @@ for i in numeros:
 	if i >= maior:
 		maior = i
 
+# or 
+# maior = max(numeros)
+
 print 'Maior: {}'.format(maior)
 print 'Posição: {}º'.format(numeros.index(maior))
 
