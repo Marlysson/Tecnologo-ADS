@@ -18,5 +18,5 @@ def conta_letra(palavra,letra):
 	# return cont
 
 
-print conta_letra('Marlysson','s')
+print conta_letra('Marlysson','o')
 

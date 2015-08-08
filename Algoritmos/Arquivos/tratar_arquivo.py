@@ -38,13 +38,3 @@ def avoids(palavra,letras):
 		if i in palavra:
 			return False
 		return True
-
-
-
-
-
-
-
-
-		
-

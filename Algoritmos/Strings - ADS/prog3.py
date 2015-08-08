@@ -14,4 +14,4 @@ def apaga_caractere(palavra,letra):
 	# return palavra.replace(letra,'')
 
 
-print apaga_caractere('Marlysson','y')
+print apaga_caractere('Marlysson','s')

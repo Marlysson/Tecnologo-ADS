@@ -1,6 +1,6 @@
 # -*- coding: utf8 -*-
 
-tempo = raw_input('Hora inicio,minuto inicio, hora final, minuto final: ').split()
+tempo = raw_input('Hora início,minuto início, hora final, minuto final: ').split()
 hora_inicio,minuto_inicio,hora_final,minuto_final = [int(i) for i in tempo]
 
 if hora_final <= hora_inicio:

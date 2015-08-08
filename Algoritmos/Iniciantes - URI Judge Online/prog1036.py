@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 from math import sqrt
 
-valores = raw_input('3 valores separados por vírgula: ').split()
+valores = raw_input('3 valores separados por espaço: ').split()
 valor_a,valor_b,valor_c = [float(i) for i in valores]
 
 delta = pow(valor_b,2) - (4 * valor_a * valor_c)
