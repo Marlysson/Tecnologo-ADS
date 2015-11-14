@@ -8,4 +8,4 @@ def prim_ult(palavra,num):
 
 	return retorno
 
-print prim_ult('Instituto',2)
+print prim_ult('Instituto',3)

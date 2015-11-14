@@ -4,14 +4,13 @@ numeros = []
 pares,impares,positivos,negativos = 0,0,0,0
 
 for i in range(5):
-	numeros.append(int(input('Número: ')))
+	num = int(input('Número: '))
 
-for i in numeros:
-	if i % 2 == 0:
+	if num % 2 == 0:
 		pares += 1
 	else:
 		impares += 1
-	if i > 0:
+	if num > 0:
 		positivos += 1
 	else:
 		negativos += 1

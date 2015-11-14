@@ -6,17 +6,17 @@ def contida(palavra1,palavra2):
 	# 	return 'Contem'
 	# return 'Nao contem'
 
-	#Manualmente
+	# Manualmente
 	cont = 0
 	if len(palavra1) <= len(palavra2):
 		for i in range(0,len(palavra2)+1):
 			#Percorre cada espaço da string com o tamanho da string menor
-			#Ex:asa,casade => cas,asa,sad,ade **utilizar anagramas
+			#Ex:asa,casade => cas,asa,sad,ade **utilizar combinações
 			if palavra2[i:i+len(palavra1)] == palavra1:
-				return 'Contem'
-		return 'Nao Contem'
+				return 'Contém'
+		return 'Nao Contém'
 	else:
 		return 'Palavra1 maior que palavra2'
 
 
-print contida('ista','otorrinolaringologista')
+print contida('nolar','otorrinolaringologista')

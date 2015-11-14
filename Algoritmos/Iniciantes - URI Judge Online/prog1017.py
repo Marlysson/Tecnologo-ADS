@@ -1,3 +1,4 @@
+# -*- coding:utf8 -*-
 '''
 Joaozinho quer calcular e mostrar a quantidade de litros de combustível gastos em uma viagem,
 ao utilizar um automóvel que faz 12 KM/L. Para isso, ele gostaria que você o auxiliasse através

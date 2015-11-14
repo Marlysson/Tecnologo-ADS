@@ -7,7 +7,7 @@ e a posição dentre os 100 valores lidos.
 
 import random
 
-numeros = random.sample(xrange(1,100000),100)
+numeros = random.sample(xrange(1,1000),10)
 
 maior = 0
 for i in numeros:

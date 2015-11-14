@@ -9,7 +9,7 @@ produtos = {
 }
 
 codigo = str(input('Código do produto: '))
-quantidade = int(input('Quandidade de '))
+quantidade = int(input('Quantidade de: '))
 
 print 'Quantidade a pagar: R$ %.2f' % (quantidade*produtos[codigo]['valor'])
 

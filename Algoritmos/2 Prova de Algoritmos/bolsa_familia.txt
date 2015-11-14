@@ -1,0 +1,5 @@
+001|marlysson,marcelo,maria,marcelo|PI|Teresina|2200
+002|marcos,marcia,junior|SP|Morumbi|5500
+003|clara,aristides,joao,josé|RJ|Rio de Janeiro|1500
+415|Marlysson|PI|TERESINA|500.0
+231|Marcos|PI|Teresina|2500.0

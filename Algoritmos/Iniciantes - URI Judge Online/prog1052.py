@@ -1,4 +1,4 @@
-# -*- coding : utf-8 -*-
+# -*- coding : utf8 -*-
 
 mes = int(input('Numero do Mes: '))
 
@@ -7,5 +7,5 @@ meses = {
 	8:'August',9:'September',10:'October',11:'November',12:'December'
 }
 
-print '{}'.format(meses[mes])
+print '{}'.format(meses.get(mes))
 

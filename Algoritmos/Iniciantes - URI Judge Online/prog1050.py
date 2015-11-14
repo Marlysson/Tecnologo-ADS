@@ -16,5 +16,5 @@ ddd = int(input('DDD do local: '))
 if not ddds.has_key(ddd):
 	print 'DDD não cadastrado'
 else:
-	print '\nLocal: {}'.format(ddds[ddd])
+	print '\nLocal: {}'.format(ddds.get(ddd))
 

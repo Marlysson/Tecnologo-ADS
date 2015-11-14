@@ -1,16 +1,13 @@
 from math import sqrt
 
-ponto1 = raw_input('Dois valores do ponto 1: ')
-ponto2 = raw_input('Dois valores do ponto 2: ')
-
-x1,y1 = ponto1.split()
-x2,y2 = ponto2.split()
-
 def distancia(x1,x2,y1,y2):
-	distancia = sqrt( (int(x2) - int(x1))**2 + (int(y2) - int(y1))**2 )
+
+	distancia = sqrt( pow(( float(x2)-float(x1) ),2) + pow( ( float(y2)-float(y1) ),2) )
 	return distancia
 
+x1,y1 = raw_input('Dois valores do ponto 1: ').split()
+x2,y2 = raw_input('Dois valores do ponto 2: ').split()
 
 distancia = distancia(x1,x2,y1,y2)	
 
-print 'DISTANCIA ENTRE OS PONTOS %.2f ' %distancia
+print 'DISTANCIA ENTRE OS PONTOS: %.4f' %distancia
