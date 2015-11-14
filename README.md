@@ -10,5 +10,5 @@
 
 
 ## Tópicos do Curso de Análise de Sistemas.
-* **[Algoritmos](https://github.com/Marlysson/Tecnologo-ADS/tree/master/Algoritmos)**
-* **[Matemática Computacional](https://github.com/Marlysson/Tecnologo-ADS/tree/master/Matem%C3%A1tica%20Computacional)**
+* [Algoritmos](https://github.com/Marlysson/Tecnologo-ADS/tree/master/Algoritmos)
+* [Matemática Computacional](https://github.com/Marlysson/Tecnologo-ADS/tree/master/Matem%C3%A1tica%20Computacional)
