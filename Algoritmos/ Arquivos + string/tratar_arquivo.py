@@ -28,7 +28,7 @@ def palavra_sem_e(arquivo):
 
 	print 'Palavras sem a letra \'e\''	
 	for i in palavras_sem_e:
-		print i
+		yield i
 
 	porcentagem = (len(palavras_sem_e) / cont ) * 100.0
 	print 'Porcentagem de palavras sem \'e\': {:.2f} % '.format(porcentagem)

@@ -1,6 +1,9 @@
 #-*- coding: utf-8 -*-
+import os
 
-palavras = [palavra.strip() for palavra in open('palavras.txt')]
+palavras = os.path.join("arquivos","palavras.txt")
+
+palavras = [palavra.strip() for palavra in open(palavras)]
 
 reverses = {}
 

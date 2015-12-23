@@ -1,6 +1,9 @@
 #-*- coding: utf-8 -*-
+import os
 
-nomes = [nome.strip() for nome in open("nomes.txt")]
+nomes = os.path.join("arquivos","nomes.txt")
+
+nomes = [nome.strip() for nome in open(nomes)]
 dados = []
 
 def remove_all(lista,item):

@@ -1,10 +1,10 @@
 # -*- coding:utf-8 -*-
 
+import os
 from operacoes import *
 from dados import *
-from random import randint
 
-arquivo = 'bolsa_familia.txt'
+arquivo = os.path.join("arquivos","bolsa_familia.txt")
 
 funcionalidades = [
 		'Inserir Família',
@@ -32,11 +32,7 @@ while True:
 			membro = raw_input('Nome: ')
 			membros.append(membro)		
 		
-		cod = "".join([
-			str(randint(1,5)),
-			str(randint(1,5)),
-			str(randint(1,5))
-		])
+		cod = gera_code()
 
 		membros = ",".join(membros)
 		estado = raw_input('Estado: ').upper()

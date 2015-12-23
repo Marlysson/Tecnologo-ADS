@@ -17,30 +17,36 @@ def has_duplicates(arquivo):
 		dados = aluno.split(';')
 		nomes.append(dados[1])
 
+	print nomes
+
 	for nome in nomes:
 		if nomes.count(nome) > 1:
 			return True
 	return False
 
-def porcentagem(arquivo):
-	masculino , feminino = 0 , 0
+def porcentagem(arquivo,s=None):
+	generos = {'M':0,'F':0}
 
 	dados_alunos = converte_to_lista(arquivo)
 
 	for i in dados_alunos:
 		dado = i.split(';')
-		sexo = dado[3]
+		sexo = dado[3].upper()
 
 		if sexo == 'M':
-			masculino += 1
+			generos['M'] += 1
 		else:
-			feminino += 1
+			generos['F'] += 1
 
-	total = masculino + feminino
+	total = generos['M'] + generos['F']
 
-	porcent_masc = ( masculino / float(total) )* 100
-	porcent_fem  = ( feminino / float(total) ) * 100
+	porcent_masc = ( generos['M'] / float(total) ) * 100
+	# porcent_fem  = ( generos['F'] / float(total) ) * 100
+	porcent_fem = 100 - porcent_masc
 
-	return 'Masculino: {:.2f} %  \nFeminino: {:.2f} %'.format(porcent_masc, porcent_fem)
+	return {'masc':porcent_masc,'fem':porcent_fem}
 
-print porcentagem(dados_alunos)
+dados = porcentagem(dados_alunos)
+masc = dados['masc']
+fem  = dados['fem']
+

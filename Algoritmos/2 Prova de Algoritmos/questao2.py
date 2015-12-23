@@ -1,12 +1,15 @@
 #-*- coding: utf-8 -*-
-
+import os
 alunos = []
 
-for i in open("gabarito.txt"):
+gabarito = os.path.join("arquivos","gabarito.txt")
+cartoes  = os.path.join("arquivos","cartoes.txt")
+
+for i in open(gabarito):
 	gabarito = list(str(i).upper())
 
 
-for dados_aluno in open("cartoes.txt"):
+for dados_aluno in open(cartoes):
 	aluno = dados_aluno.strip().split("#")
 	matric , prova = aluno[0] , list(str(aluno[1]).upper())
 	nota = 0

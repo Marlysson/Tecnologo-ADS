@@ -22,3 +22,14 @@ def busca_by(familias,cod=None,uf=None,city=None):
 
 def alterar_dados(familia,atributo):
 	pass
+
+def gera_code():
+	from random import randint
+
+	code = "".join([
+			str(randint(1,5)),
+			str(randint(1,5)),
+			str(randint(1,5))
+		])
+
+	return code
