@@ -19,7 +19,7 @@ if( func1 == func2){
 > Diferentes
 
 
-#### Questão 5
+### Questão 5
 >Já com um objeto criado a partir da referência de outro objeto e feito a "clonagem" do objeto de origem para o destino junto com os seus atributos é mostrado que são iguais, pois possuem mesmo endereço de memória.
 
 ```java
@@ -36,7 +36,7 @@ if( func1 == func2){
 ```
 > Iguais
 
-#### Questão 7
+### Questão 7
 
 Se for usado o método ```.mostra()``` antes de iniciar os atributos,é mostrado seus valores
 com os valores iniciais dos seus tipos, ```int = 0``` , ```float = 0.0 ``` , e no caso dos atributos da classe vem com o valor ```null```.
@@ -52,7 +52,7 @@ RG: null
 Data inicio: null
 ```
 
-#### Questão 8
+### Questão 8
 Se tentar acessar diretamente da classe não irá funcionar.
 
 ```java
@@ -64,7 +64,7 @@ Funcionario.salario = 1234;
 que possuir sua visibilidade definida como ```static```, assim só poderão ser chamados pela própria classe.
 
 
-#### Análise
+### Análise
 
 ```java
 Funcionario.salario = 1234;
