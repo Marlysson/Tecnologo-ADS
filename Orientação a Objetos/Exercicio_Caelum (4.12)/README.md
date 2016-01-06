@@ -7,7 +7,7 @@ os objetos não são iguais, pois possuem endereços diferentes de memória.
 Funcionario func1 = new Funcionario();
 func1.nome = "Marlysson";
 
-Funcionario func2 = New Funcionario();
+Funcionario func2 = new Funcionario();
 func2.nome = "Marlysson";
 
 if( func1 == func2){
@@ -61,10 +61,11 @@ Funcionario.salario = 1234;
 >_**Erro:** non-static variable salario cannot be referenced from a static context._
 
 **Explicação** : Para acessar atributos e métodos diretamente das classes, esses valores tem
-que possuir sua visibilidade definido como ```static```, assim só poderão ser chamados pela própria classe.
+que possuir sua visibilidade definida como ```static```, assim só poderão ser chamados pela própria classe.
 
 
-#### _**Análise**_
+#### Análise
+
 ```java
 Funcionario.salario = 1234;
 Funcionario.calculaGanhoAnual();
