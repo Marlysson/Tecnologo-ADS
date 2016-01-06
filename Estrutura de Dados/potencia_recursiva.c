@@ -2,8 +2,10 @@
 #include <stdlib.h>
 
 int potencia(base,expoente){
-	if (expoente == 1){
-		return base;	
+	if (expoente == 0){
+		return 1;
+	}else if (expoente == 1){
+		return base;
 	}else{
 		return base * potencia(base, expoente - 1 );
 	}
