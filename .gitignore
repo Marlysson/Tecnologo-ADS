@@ -1,4 +1,4 @@
-*/*.bak
-*/*.pyc
-*/*.class
-*/*.exe
+/*.bak
+/*.pyc
+/*.class
+/*.exe

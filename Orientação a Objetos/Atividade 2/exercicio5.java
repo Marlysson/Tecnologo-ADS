@@ -10,7 +10,7 @@ class Exercicio5 {
 			if ( verifyPassword(senha) ){
 				System.out.print("Acesso permitido.");
 				break;
-			}else if ( !verifyPassword(senha) ) {
+			}else {
 
 				cont += 1;
 
