@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Move 3 elements to &apos;Exercicio_Caelum (4.12)/br.edu.ifpi.banco.modelo&apos;&#x0D;&#x0A;- Original project: &apos;Exercicio_Caelum (4.12)&apos;&#x0D;&#x0A;- Destination element: &apos;Exercicio_Caelum (4.12)/br.edu.ifpi.banco.modelo&apos;&#x0D;&#x0A;- Original elements:&#x0D;&#x0A;     Data.java&#x0D;&#x0A;     TestaFuncionario.java&#x0D;&#x0A;     Funcionario.java&#x0D;&#x0A;- Update references to refactored element" description="Move compilation units" destination="/&lt;br.edu.ifpi.banco.modelo" element1="/&lt;{Data.java" element2="/&lt;{TestaFuncionario.java" element3="/&lt;{Funcionario.java" files="0" flags="589830" folders="0" id="org.eclipse.jdt.ui.move" policy="org.eclipse.jdt.ui.moveResources" qualified="false" references="true" stamp="1452110944375" units="3" version="1.0"/>
+</session>
