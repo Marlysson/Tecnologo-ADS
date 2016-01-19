@@ -1,0 +1,34 @@
+Restaurante
+
+	Atributos:
+		- Nome
+		- Mesas array de mesas [20]
+		
+	Metodos:
+		- juntarMesas(Mesa mesa1,Mesa mesa2)
+
+Mesa
+
+	Atributos:
+		- Pedidos
+		- Quantidade de pessoas
+		- Identificador Mesa (static)
+	Métodos:
+		- abrirMesa()
+		- adicionarPedido()
+		- calculaConta('Taxa')
+		- verStatus()
+		- ratearConta()
+		- exibirConta()
+
+Pedido
+	Atributos
+	 	- Item
+	 	- Preco
+
+
+
+mesa = new Mesa()
+mesa.addPedido("Item",30)
+mesa.addPedido("Item",20)
+mesa.addPedido("Item",10)
