@@ -45,8 +45,8 @@ public class Mesa {
 	}
 	
 	public void adicionarPedido(String nome, double valor){
-		if (this.isDisponivel()){
-			System.out.println("Por favor, abra a mesa primeiro!");
+		if (!this.isDisponivel()){
+			System.out.println("Por favor, abra a mesa primeiro!"+identificador);
 			return;
 		}
 		

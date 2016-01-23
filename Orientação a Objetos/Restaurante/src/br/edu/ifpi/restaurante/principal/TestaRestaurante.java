@@ -15,12 +15,12 @@ public class TestaRestaurante {
 		m2.adicionarPedido("Refrigerante", 10);
 		m2.adicionarPedido("Refrigerante 1", 10);
 		m2.adicionarPedido("Refrigerante 2", 10);
+		m2.adicionarPedido("Refrigerante 2", 10);
 		
 		Mesa m3 = r1.abrirMesa(3);
 		
 		m3.adicionarPedido("Refri", 10);
 		m3.adicionarPedido("Suco", 10);
-		
 		
 		System.out.println("Mesa "+m1.getIdentificador()+" "+m1.getStatus());
 		m1.checarConta(true);
@@ -31,5 +31,8 @@ public class TestaRestaurante {
 		m2.checarConta(true);
 		m2.rateio(3);
 		System.out.println(m2);
+	
+		
+		System.out.println(r1.verMovimento());
 	}
 }

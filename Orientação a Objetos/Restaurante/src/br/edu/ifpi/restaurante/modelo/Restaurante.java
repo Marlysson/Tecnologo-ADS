@@ -14,6 +14,10 @@ public class Restaurante {
 		}
 	}
 
+	public String getNome(){
+		return this.nome;
+	}
+	
 	public Mesa abrirMesa(int numeroMesa){
 		//opens the set table and define your status to "OCUPADO".
 		
@@ -32,6 +36,36 @@ public class Restaurante {
 	public Mesa[] getMesas(){
 		//Return all tables of restaurant
 		return mesas;
+	}
+	
+	public String verMovimento(){
+		int mesasDisponiveis = 0;
+		int mesasOcupadas = 0;
+		int mesasReservadas = 0;
+		double valorTotal = 0;
+		String retorno = "";
+		
+		boolean taxa = false;
+		
+		for(Mesa mesa: getMesas()){
+			valorTotal += mesa.checarConta(taxa);
+			
+			if (mesa.getStatus() == Mesa.DISPONIVEL){
+				mesasDisponiveis += 1;
+			}else if (mesa.getStatus() == Mesa.OCUPADA){
+				mesasOcupadas += 1;
+			}else{
+				mesasReservadas += 1;
+			}
+		}
+		
+		retorno += "Movimento do Restaurante "+this.getNome()+"\n";
+		retorno += "Mesas Disponiveis: "+mesasDisponiveis+"\n";
+		retorno += "Mesas Ocupadas: "+mesasOcupadas+"\n";
+		retorno += "Mesas Reservadas: "+mesasReservadas+"\n";
+		retorno += "RENDA TOTAL: R$"+valorTotal;
+		
+		return retorno;
 	}
 	
 	public String toString(){
