@@ -22,7 +22,7 @@ public class Tema {
 	}
 	
 	public void AdicionarItem(String nome,double valor){
-			this.itens.add(new Item(nome,valor));
+		this.itens.add(new Item(nome,valor));
 	}
 	
 	public ArrayList<Item> getItens(){
