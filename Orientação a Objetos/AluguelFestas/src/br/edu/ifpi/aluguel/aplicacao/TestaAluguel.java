@@ -16,18 +16,23 @@ public class TestaAluguel {
 		
 		Festa festa = new Festa(cliente,endereco);
 		
-		Tema tema = new Tema("Super Herói","Azul");
+		Tema tema = new Tema("Super Heróis");
+		tema.setCorToalha("Azul");
 		
 		tema.AdicionarItem("Doces",100);
-		tema.AdicionarItem("Boneca",120);
-		tema.AdicionarItem("Bruxa",50);
-		tema.AdicionarItem("Balão",30);
+		tema.AdicionarItem("Super Man",120);
+		tema.AdicionarItem("Capitão América",50);
+		tema.AdicionarItem("Batman",30);
+		tema.AdicionarItem("Doces",100);
+		tema.AdicionarItem("Super Man",120);
+		tema.AdicionarItem("Capitão América",50);
+		tema.AdicionarItem("Batman",30);
+		tema.AdicionarItem("Batman",30);
 		
-		Aluguel aluguel = new Aluguel(festa,tema,2500);
+		Aluguel aluguel = new Aluguel(festa,tema,3500);
 		aluguel.setDataFesta("26/01/2016");
 		aluguel.setHoraInicio("19:00");
 		aluguel.setHoraFinal("24:00");
-		
 		
 		System.out.println(aluguel);
 		

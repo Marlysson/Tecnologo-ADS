@@ -10,10 +10,6 @@ public class Item {
 		this.nome = nome;
 	}
 	
-	public Item(){
-		
-	}
-	
 	public String getNome(){
 		return this.nome;
 	}

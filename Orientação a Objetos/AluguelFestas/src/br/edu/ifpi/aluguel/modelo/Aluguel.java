@@ -15,7 +15,11 @@ public class Aluguel {
 		this.valorLocacao = valor;
 	}
 	
-	public double getValorTotal(){
+	public double getValorLocacao(){
+		return this.valorLocacao;
+	}
+	
+	public double getValorAluguel(){
 		return this.valorLocacao + tema.getValor();
 	}
 	
@@ -39,22 +43,24 @@ public class Aluguel {
 		
 		str += "HORÁRIO: \n";
 		str += "Data: "+this.dataFesta+"\n";
-		str += "Hora de inicio: "+this.horaFinal+"\n";
+		str += "Hora de inicio: "+this.horaInicio+"\n";
 		str += "Hora término: "+this.horaFinal+"\n \n"; 
 		
-		str += "TEMA: \n";
-		str += "Itens: \n";
+		str += "ENDEREÇO: \n";
+		str += festa.getEndereco()+"\n \n";
+		
+		str += "TEMA: "+tema.getNome()+"\n";
+		str += "Itens: "+"\n";
 		
 		for( Item item : tema.getItens()){
-			if (item != null){
 				str += "- "+item.getNome();
 				str += " - R$ "+item.getValor()+"\n";	
-			}
 		}
 
-		str += "\nVALOR TOTAL(Locação + Tema)\n";
-		str += "R$ "+this.getValorTotal();
-		
+		str += "\nDESPESAS: \n";
+		str += String.format("Locação: R$ %.2f",this.valorLocacao)+"\n";
+		str += String.format("Tema: R$ %.2f",tema.getValor())+"\n";
+		str += String.format("Valor Total: R$ %.2f",this.getValorAluguel());
 		
 		return str;
 	}

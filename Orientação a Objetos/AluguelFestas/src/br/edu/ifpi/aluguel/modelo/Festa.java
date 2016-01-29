@@ -14,6 +14,10 @@ public class Festa {
 		return this.contratante;
 	}
 	
+	public String getEndereco() {
+		return endereco.getNomeDaRua()+" "+endereco.getNumeroCasa()+" "+endereco.getBairro(); 
+	}
+	
 	public String toString(){
 		String str = "";
 		
