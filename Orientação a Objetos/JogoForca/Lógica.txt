@@ -1,0 +1,21 @@
+Classes:
+ tema ok
+ boneco
+ rodada
+ jogador ok
+ JogoForca
+ 
+ Responsabilidades:
+ 
+ Tema
+ - Adicionar palavras
+ - Palavra aleatória
+ 
+ Boneco
+ - Se Mostrar com base nos dados da rodada
+ 
+ Rodada
+ - Sortear um tema 
+ 
+ Jogador
+ - Possuir dados para informação
