@@ -13,7 +13,12 @@ public class Conta {
 		}
 		
 		public void deposita(double valor){
-			this.saldo += valor;			
+			if (valor < 0){
+				throw new ValorInvalidoException(valor);
+			}else{
+				this.saldo += valor;	
+			}
+						
 		}
 		
 		public void atualiza(double taxa){
