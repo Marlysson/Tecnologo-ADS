@@ -1,7 +1,9 @@
 
 from django.test import TestCase
 
-from .models import Cliente , Fornecedor , Produto
+from .models import Cliente , Fornecedor , Produto , Pedido , ItemPedido , Venda
+
+from model_mommy import mommy
 
 class TestCliente(TestCase):
 
@@ -36,6 +38,8 @@ class TestCliente(TestCase):
 			responsavel="José Fernandes",
 			website="www.armazemparaiba.com")
 
+		self.fornecedor = fornecedor
+
 		self.assertEquals(1,fornecedor.id)
 
 
@@ -53,3 +57,69 @@ class TestCliente(TestCase):
 
 		self.assertEquals(1,arroz.codigo_produto)
 		self.assertEquals(2,feijao.codigo_produto)
+
+	def test_deve_criar_um_pedido_para_um_fornecedor(self):
+
+		from datetime import date , timedelta
+
+		self.fornecedor = mommy.make(Fornecedor)
+
+		pedido = Pedido.objects.create(
+			data_pedido = date.today(),
+			data_recebimento = date.today() + timedelta(days=10),
+			preco_total = 0,
+			codigo_fornecedor = self.fornecedor,
+		)
+
+		self.assertEquals(1,pedido.codigo)
+
+
+	def test_deve_adicionar_itens_a_pedido(self):
+
+		from datetime import date , timedelta
+
+		self.fornecedor = mommy.make(Fornecedor)
+		self.produtos    = mommy.make(Produto,2)
+
+		pedido = Pedido.objects.create(
+			data_pedido = date.today(),
+			data_recebimento = date.today() + timedelta(days=10),
+			preco_total = 0,
+			codigo_fornecedor = self.fornecedor,
+		)
+
+		livro = ItemPedido.objects.create(
+			codigo_pedido=pedido,
+			codigo_produto=self.produtos[0],
+			preco_unitario=15.0,
+			quantidade=2
+		)
+
+		cd_videogame = ItemPedido.objects.create(
+			codigo_pedido=pedido,
+			codigo_produto=self.produtos[1],
+			preco_unitario=150.00,
+			quantidade=2
+		)
+
+		pedido.adicionar_item(livro)
+
+		self.assertEquals(pedido.preco_total,30.00)
+
+		pedido.adicionar_item(cd_videogame)
+
+		self.assertEquals(pedido.preco_total,330.00)
+
+	def test_deve_criar_uma_venda_corretamente(self):
+
+		from datetime import date
+
+		cliente = mommy.make(Cliente)
+
+		venda = Venda.objects.create(
+			data_venda=date.today(),
+			valor_total = 0,
+			codigo_cliente=cliente
+		)
+
+		self.assertEquals(1, venda.codigo_venda)
