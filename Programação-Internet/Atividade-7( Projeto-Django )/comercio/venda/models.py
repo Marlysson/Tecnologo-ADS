@@ -53,10 +53,15 @@ class Fornecedor(models.Model):
 class Pedido(models.Model):
 
 	codigo 			  = models.AutoField(primary_key=True)
-	data_pedido       = models.DateField(auto_now_add=True)
-	data_recebimento  = models.DateField(auto_now_add=True)
+	data_pedido       = models.DateField()
+	data_recebimento  = models.DateField()
 	preco_total 	  = models.DecimalField(max_digits=10,decimal_places=2)
 	codigo_fornecedor = models.ForeignKey(Fornecedor,related_name="pedidos")
+
+	def adicionar_item(self,item):
+
+		item.codigo_pedido = self
+		self.preco_total += item.preco_unitario * item.quantidade
 
 	class Meta:
 		db_table = 'pedido'
