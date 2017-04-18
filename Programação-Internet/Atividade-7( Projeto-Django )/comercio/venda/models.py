@@ -5,8 +5,8 @@ from datetime import date
 
 class Cliente(models.Model):
 
-	validador_cpf = RegexValidator("^\d{3}\.\d{3}\.\d{3}-\d{2}$")
-	validador_cep = RegexValidator("^\d{5}-\d{4}$")
+	validador_cpf  = RegexValidator("^\d{3}\.\d{3}\.\d{3}-\d{2}$")
+	validador_cep  = RegexValidator("^\d{5}-\d{4}$")
 	validador_fone = RegexValidator("^\d{4}-\d{4}$")
 
 	cpf 			 = models.CharField(max_length=14,validators=[validador_cpf],blank=False,null=False)
@@ -52,7 +52,7 @@ class Fornecedor(models.Model):
 
 class Pedido(models.Model):
 
-	codigo 			  = models.IntegerField(primary_key=True)
+	codigo 			  = models.AutoField(primary_key=True)
 	data_pedido       = models.DateField(auto_now_add=True)
 	data_recebimento  = models.DateField(auto_now_add=True)
 	preco_total 	  = models.DecimalField(max_digits=10,decimal_places=2)
@@ -66,7 +66,7 @@ class Pedido(models.Model):
 
 class Produto(models.Model):
 
-	codigo_produto = models.IntegerField(primary_key=True)
+	codigo_produto = models.AutoField(primary_key=True)
 	nome_produto   = models.CharField(max_length=35)
 	quantidade     = models.IntegerField()
 	min_quantidade = models.DecimalField(max_digits=10,decimal_places=2)
@@ -80,7 +80,7 @@ class Produto(models.Model):
 
 class Venda(models.Model):
 
-	codigo_venda   = models.IntegerField(primary_key=True)
+	codigo_venda   = models.AutoField(primary_key=True)
 	data_venda     = models.DateField(auto_now_add=True)
 	valor_total    = models.DecimalField(max_digits=10,decimal_places=2)
 	codigo_cliente = models.ForeignKey(Cliente,related_name="vendas")
