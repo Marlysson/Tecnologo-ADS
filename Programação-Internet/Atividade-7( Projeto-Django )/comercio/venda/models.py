@@ -6,7 +6,7 @@ from datetime import date
 class Cliente(models.Model):
 
 	validador_cpf  = RegexValidator("^\d{3}\.\d{3}\.\d{3}-\d{2}$")
-	validador_cep  = RegexValidator("^\d{5}-\d{4}$")
+	validador_cep  = RegexValidator("^\d{5}-\d{3}$")
 	validador_fone = RegexValidator("^\d{4}-\d{4}$")
 
 	cpf 			 = models.CharField(max_length=14,validators=[validador_cpf],blank=False,null=False)
@@ -15,7 +15,7 @@ class Cliente(models.Model):
 	complemento 	 = models.TextField(max_length=50,blank=True,null=True)
 	cidade 			 = models.CharField(max_length=25)
 	estado 			 = models.CharField(max_length=2)
-	cep 			 = models.CharField(max_length=10,validators=[validador_cep])
+	cep 			 = models.CharField(max_length=9,validators=[validador_cep])
 	fone_residencial = models.CharField(max_length=9,validators=[validador_fone])
 	fone_trabalho 	 = models.CharField(max_length=9,validators=[validador_fone])
 	renda_familiar   = models.DecimalField(max_digits=10,decimal_places=2)
@@ -32,14 +32,15 @@ class Fornecedor(models.Model):
 
 	validador_cpnj = RegexValidator("\d{2}\.\d{3}\.\d{3}\/\d{4}\-\d{2}")
 	validador_fone = RegexValidator("^\d{4}-\d{4}$")
+	validador_cep  = RegexValidator("^\d{5}-\d{3}$")
 
-	cnpj 		= models.CharField(max_length=20,validators=[validador_cpnj])
+	cnpj 		= models.CharField(max_length=20,validators=[validador_cpnj],null=False,blank=False)
 	nome 		= models.CharField(max_length=30)
 	endereco 	= models.CharField(max_length=35)
 	complemento = models.CharField(max_length=50)
 	cidade 		= models.CharField(max_length=25)
 	estado 		= models.CharField(max_length=2)
-	cep 		= models.CharField(max_length=8)
+	cep 		= models.CharField(max_length=9,validators=[validador_cep])
 	fone 		= models.CharField(max_length=9,validators=[validador_fone])
 	responsavel = models.CharField(max_length=30)
 	website		= models.URLField()
