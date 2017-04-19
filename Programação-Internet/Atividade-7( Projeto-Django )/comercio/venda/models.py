@@ -49,7 +49,7 @@ class Fornecedor(models.Model):
 		db_table = 'fornecedor'
 
 	def __str__(self):
-		return "Fornecedor ({} , {})".format(self.cnpj, self.nome)
+		return "{}".format(self.nome)
 
 class Pedido(models.Model):
 
@@ -60,8 +60,6 @@ class Pedido(models.Model):
 	codigo_fornecedor = models.ForeignKey(Fornecedor,related_name="pedidos")
 
 	def adicionar_item(self,item):
-
-		item.codigo_pedido = self
 		self.preco_total += item.preco_unitario * item.quantidade
 
 	class Meta:
@@ -93,6 +91,9 @@ class Venda(models.Model):
 
 	class Meta:
 		db_table = 'venda'
+
+	def adicionar_item(self,item):
+		self.valor_total += item.preco_unitario * item.quantidade
 
 	def __str__(self):
 		return "Venda ( {}, {} )".format(date.strftime(self.data_venda,"%d/%m/%Y"),self.valor_total)
