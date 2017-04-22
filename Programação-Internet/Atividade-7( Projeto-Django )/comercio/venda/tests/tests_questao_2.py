@@ -107,3 +107,41 @@ class TestsSegundaQuestao(TestCase):
     	pedido = Pedido.objects.get(pk=pedido.pk)
 
     	self.assertEquals(1,pedido.codigo)
+
+    def test_deve_todos_os_itens_de_um_pedido(self):
+
+    	from datetime import date , timedelta
+
+    	fornecedor = Fornecedor.objects.create(**fixture_fornecedor)
+    	cd = Produto.objects.create(**fixture_produto_cd)
+    	livro = Produto.objects.create(**fixture_produto_livro)
+
+    	pedido = Pedido.objects.create(
+    		data_pedido=date.today(),
+    		data_recebimento=date.today() + timedelta(days=2),
+    		preco_total=0,
+    		codigo_fornecedor=fornecedor
+    	)
+
+    	livros = ItemPedido.objects.create(
+    		codigo_pedido=pedido,
+    		codigo_produto=livro,
+    		preco_unitario=50,
+    		quantidade=2
+    	)
+
+    	cds = ItemPedido.objects.create(
+    		codigo_pedido=pedido,
+    		codigo_produto=cd,
+    		preco_unitario=40,
+    		quantidade=3
+    	)
+
+    	itens = pedido.itens.all()
+
+    	queryset_dos_itens = []
+
+    	queryset_dos_itens.append('<ItemPedido: Produto=(nome=Não conte à ninguém, estoque=100), total=100.00>')
+    	queryset_dos_itens.append('<ItemPedido: Produto=(nome=Skillet - Invincible, estoque=200), total=120.00>')
+
+    	self.assertQuerysetEqual(list(itens),queryset_dos_itens)
