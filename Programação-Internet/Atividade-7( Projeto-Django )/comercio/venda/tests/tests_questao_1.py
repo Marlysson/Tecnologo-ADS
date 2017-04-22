@@ -1,16 +1,16 @@
 
 from django.test import TestCase
 
-from .fixtures import *
+from venda.fixtures import *
 
-from .models import Cliente, Fornecedor, Produto, Pedido, ItemPedido, Venda,  \
+from venda.models import Cliente, Fornecedor, Produto, Pedido, ItemPedido, Venda,  \
     ItemVenda
 
 from datetime import date, timedelta
 import unittest
 
 
-class TestCliente(TestCase):
+class TestsPrimeiraQuestao(TestCase):
 
     def setUp(self):
 
@@ -81,12 +81,8 @@ class TestCliente(TestCase):
             quantidade=2
         )
 
-        pedido.adicionar_item(item_livro)
-
-        self.assertEquals(pedido.preco_total, 30.00)
-
-        pedido.adicionar_item(item_cd)
-
+        pedido.refresh_from_db()
+        
         self.assertEquals(pedido.preco_total, 330.00)
 
     def test_deve_criar_uma_venda_corretamente(self):
@@ -124,12 +120,11 @@ class TestCliente(TestCase):
             quantidade=10
         )
 
-        for item in [item_livro, item_cd]:
-            venda.adicionar_item(item)
-
         quantidade_itens_venda = ItemVenda.objects.filter(
             codigo_venda=venda).count()
 
+
         self.assertEquals(quantidade_itens_venda, 2)
 
+        venda.refresh_from_db()
         self.assertEquals(550, venda.valor_total)
