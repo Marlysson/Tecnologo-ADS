@@ -57,16 +57,13 @@ class Pedido(models.Model):
 	data_pedido       = models.DateField()
 	data_recebimento  = models.DateField()
 	preco_total 	  = models.DecimalField(max_digits=10,decimal_places=2)
-	codigo_fornecedor = models.ForeignKey(Fornecedor,related_name="pedidos")
-
-	def adicionar_item(self,item):
-		self.preco_total += item.preco_unitario * item.quantidade
+	codigo_fornecedor = models.ForeignKey(Fornecedor,related_name="meus_pedidos")
 
 	class Meta:
 		db_table = 'pedido'
 
 	def __str__(self):
-		return "Pedido ({} , {})".format(date.strftime(self.data_pedido,"%d/%m/%Y"),self.preco_total)
+				return "Pedido ( id={} , data={}, preco_total={} )".format(self.codigo_venda,date.strftime(self.data_pedido,"%d/%m/%Y"),self.preco_total)
 
 class Produto(models.Model):
 
@@ -87,40 +84,58 @@ class Venda(models.Model):
 	codigo_venda   = models.AutoField(primary_key=True)
 	data_venda     = models.DateField(auto_now_add=True)
 	valor_total    = models.DecimalField(max_digits=10,decimal_places=2)
-	codigo_cliente = models.ForeignKey(Cliente,related_name="vendas")
+	codigo_cliente = models.ForeignKey(Cliente,related_name="minhas_compras")
 
 	class Meta:
 		db_table = 'venda'
 
-	def adicionar_item(self,item):
-		self.valor_total += item.preco_unitario * item.quantidade
-
 	def __str__(self):
-		return "Venda ( {}, {} )".format(date.strftime(self.data_venda,"%d/%m/%Y"),self.valor_total)
+		return "Venda ( id={} , data={}, preco_total={} )".format(self.codigo_venda,date.strftime(self.data_venda,"%d/%m/%Y"),self.valor_total)
 
 
 class ItemVenda(models.Model):
 
-	codigo_venda   = models.ForeignKey(Venda,related_name="itens_venda")
-	codigo_produto = models.ForeignKey(Produto,related_name="produto_venda")
+	codigo_venda   = models.ForeignKey(Venda,related_name="itens")
+	codigo_produto = models.ForeignKey(Produto,related_name="itens_vendidos")
 	preco_unitario = models.DecimalField(max_digits=10,decimal_places=2)
 	quantidade     = models.IntegerField()
 
 	class Meta:
 		db_table = 'item_venda'
 
+	def save(self,*args,**kwargs):
+		
+		from decimal import Decimal
+
+		venda = Venda.objects.get(pk=self.codigo_venda.pk)
+
+		venda.valor_total += Decimal(self.preco_unitario) * self.quantidade
+		venda.save()
+
+		super(ItemVenda,self).save(*args,**kwargs)
+
 	def __str__(self):
-		return "ItemVenda ( {}, {} )".format(self.codigo_produto,self.quantidade)
+		return "ItemVenda ( {}, {} )".format(self.codigo_produto,self.preco_unitario,self.quantidade)
 
 class ItemPedido(models.Model):
 
-	codigo_pedido  = models.ForeignKey(Pedido,related_name="itens")
+	codigo_pedido  = models.ForeignKey(Pedido,related_name="itens_pedidos")
 	codigo_produto = models.ForeignKey(Produto,related_name="itens_produto")
 	preco_unitario = models.DecimalField(max_digits=10,decimal_places=2)
 	quantidade     = models.IntegerField()
 	
+	def save(self,*args,**kwargs):
+		
+		from decimal import Decimal
+
+		pedido = Pedido.objects.get(pk=self.codigo_pedido.pk)
+		pedido.preco_total += Decimal(self.preco_unitario) * self.quantidade
+		pedido.save()
+
+		super(ItemPedido,self).save(*args,**kwargs)
+
 	class Meta:
 		db_table = 'item_pedido'
 
 	def __str__(self):
-		return "ItemPedido ( {}, {} )".format(self.codigo_produto,self.quantidade)
+		return "ItemPedido ( {}, {} )".format(self.codigo_produto,self.preco_unitario*self.quantidade)

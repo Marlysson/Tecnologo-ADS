@@ -39,4 +39,3 @@ fixture_produto_cd = {
     "quantidade": 200,
     "min_quantidade": 20
 }
-
