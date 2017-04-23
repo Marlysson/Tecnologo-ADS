@@ -115,8 +115,12 @@ class ItemVenda(models.Model):
         from decimal import Decimal
 
         venda = Venda.objects.get(pk=self.codigo_venda.pk)
+        produto = Produto.objects.get(pk=self.codigo_produto.pk)
 
         venda.valor_total += Decimal(self.preco_unitario) * self.quantidade
+        produto.quantidade -= self.quantidade
+
+        produto.save()
         venda.save()
 
         super(ItemVenda, self).save(*args, **kwargs)
@@ -137,7 +141,12 @@ class ItemPedido(models.Model):
         from decimal import Decimal
 
         pedido = Pedido.objects.get(pk=self.codigo_pedido.pk)
+        produto = Produto.objects.get(pk=self.codigo_produto.pk)
+
         pedido.preco_total += Decimal(self.preco_unitario) * self.quantidade
+        produto.quantidade += self.quantidade
+
+        produto.save()
         pedido.save()
 
         super(ItemPedido, self).save(*args, **kwargs)
