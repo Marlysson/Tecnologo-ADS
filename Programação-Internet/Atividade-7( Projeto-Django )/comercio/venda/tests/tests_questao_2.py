@@ -1,174 +1,130 @@
-# -*- coding : utf-8 -*-
 
 from django.test import TestCase
-from django.db.models import Sum
-from django.db.models import F
 
-from venda.fixtures import fixture_cliente, fixture_produto_cd, \
-    fixture_produto_livro, fixture_fornecedor
+from venda.fixtures import *
 
-from venda.models import Cliente, Fornecedor, Produto, Venda, ItemVenda, ItemPedido, Pedido
+from venda.models import Cliente, Fornecedor, Produto, Pedido, ItemPedido, Venda,  \
+    ItemVenda
 
-from datetime import date
+from datetime import date, timedelta
+import unittest
 
 
 class TestsSegundaQuestao(TestCase):
 
+    def setUp(self):
+
+        self.cliente = Cliente.objects.create(**fixture_cliente)
+        self.fornecedor = Fornecedor.objects.create(**fixture_fornecedor)
+
     def tearDown(self):
+
+        Cliente.objects.all().delete()
+        Fornecedor.objects.all().delete()
         Produto.objects.all().delete()
 
-    def test_deve_retornar_todos_os_clientes_cadastrados(self):
+    def test_deve_criar_um_cliente(self):
+        self.assertEquals(1, self.cliente.id)
 
-        for indice in range(1, 6):
-            Cliente.objects.create(**fixture_cliente)
+    def test_deve_criar_um_fornecedor(self):
+        self.assertEquals(1, self.fornecedor.id)
 
-        quantidade_clientes = Cliente.objects.all().count()
+    def test_deve_criar_produtos(self):
 
-        self.assertEquals(5, quantidade_clientes)
+        arroz = Produto.objects.create(
+            nome_produto="Arroz",
+            quantidade=100,
+            min_quantidade=10)
 
-    def test_deve_retornar_todas_as_venda_de_um_cliente(self):
+        feijao = Produto.objects.create(
+            nome_produto="Feijão",
+            quantidade=200,
+            min_quantidade=20)
 
-        cliente = Cliente.objects.create(**fixture_cliente)
+        self.assertEquals(1, arroz.codigo_produto)
+        self.assertEquals(2, feijao.codigo_produto)
 
-        produto_livro = Produto.objects.create(**fixture_produto_cd)
-        produto_cd = Produto.objects.create(**fixture_produto_livro)
-
-        # Primeira compra do cliente
-
-        venda_1 = Venda.objects.create(
-            data_venda=date.today(),
-            valor_total=0,
-            codigo_cliente=cliente)
-
-        item_cd = ItemVenda.objects.create(
-            codigo_venda=venda_1,
-            codigo_produto=produto_cd,
-            preco_unitario=25,
-            quantidade=3)
-
-        item_livro = ItemVenda.objects.create(
-            codigo_venda=venda_1,
-            codigo_produto=produto_cd,
-            preco_unitario=20,
-            quantidade=5)
-
-        # Segunda compra do Cliente
-
-        venda_2 = Venda.objects.create(
-            data_venda=date.today(),
-            valor_total=0,
-            codigo_cliente=cliente)
-
-        item_cd_2 = ItemVenda.objects.create(
-            codigo_venda=venda_2,
-            codigo_produto=produto_cd,
-            preco_unitario=50,
-            quantidade=5)
-
-        item_livro_2 = ItemVenda.objects.create(
-            codigo_venda=venda_2,
-            codigo_produto=produto_livro,
-            preco_unitario=25,
-            quantidade=2)
-
-        quantidade_compras = cliente.minhas_compras.all().count()
-
-        self.assertEquals(quantidade_compras, 2)
-
-        # Compra 1
-        venda_1.refresh_from_db()
-        self.assertEquals(venda_1.valor_total, 175)
-
-        # Compra 2
-        venda_2.refresh_from_db()
-        self.assertEquals(venda_2.valor_total, 300)
-
-        valor_das_compras = sum(
-            cliente.minhas_compras.all().values_list("valor_total", flat=True))
-
-        self.assertEquals(valor_das_compras, 475)
-
-    def test_deve_retornar_um_pedido(self):
-
-        from datetime import date, timedelta
-
-        fornecedor = Fornecedor.objects.create(**fixture_fornecedor)
-        produto = Produto.objects.create(**fixture_produto_cd)
+    def test_deve_criar_um_pedido_para_um_fornecedor(self):
 
         pedido = Pedido.objects.create(
             data_pedido=date.today(),
-            data_recebimento=date.today() + timedelta(days=2),
+            data_recebimento=date.today() + timedelta(days=10),
             preco_total=0,
-            codigo_fornecedor=fornecedor
+            codigo_fornecedor=self.fornecedor,
         )
-
-        item_pedido = ItemPedido.objects.create(
-            codigo_pedido=pedido,
-            codigo_produto=produto,
-            preco_unitario=50,
-            quantidade=2
-        )
-
-        pedido = Pedido.objects.get(pk=pedido.pk)
 
         self.assertEquals(1, pedido.codigo)
 
-    def test_deve_todos_os_itens_de_um_pedido(self):
+    def test_deve_adicionar_itens_a_pedido(self):
 
-        from datetime import date, timedelta
-
-        fornecedor = Fornecedor.objects.create(**fixture_fornecedor)
-        cd = Produto.objects.create(**fixture_produto_cd)
-        livro = Produto.objects.create(**fixture_produto_livro)
+        produto_livro = Produto.objects.create(**fixture_produto_livro)
+        produto_cd = Produto.objects.create(**fixture_produto_cd)
 
         pedido = Pedido.objects.create(
             data_pedido=date.today(),
-            data_recebimento=date.today() + timedelta(days=2),
+            data_recebimento=date.today() + timedelta(days=10),
             preco_total=0,
-            codigo_fornecedor=fornecedor
+            codigo_fornecedor=self.fornecedor,
         )
 
-        livros = ItemPedido.objects.create(
+        item_livro = ItemPedido.objects.create(
             codigo_pedido=pedido,
-            codigo_produto=livro,
-            preco_unitario=50,
+            codigo_produto=produto_livro,
+            preco_unitario=15.0,
             quantidade=2
         )
 
-        cds = ItemPedido.objects.create(
+        item_cd = ItemPedido.objects.create(
             codigo_pedido=pedido,
-            codigo_produto=cd,
-            preco_unitario=40,
-            quantidade=3
+            codigo_produto=produto_cd,
+            preco_unitario=150.00,
+            quantidade=2
         )
 
-        itens = pedido.itens.all()
+        pedido.refresh_from_db()
+        
+        self.assertEquals(pedido.preco_total, 330.00)
 
-        queryset_dos_itens = []
-
-        queryset_dos_itens.append('<ItemPedido: Produto=(nome=Não conte à ninguém, estoque=102), total=100.00>')
-        queryset_dos_itens.append('<ItemPedido: Produto=(nome=Skillet - Invincible, estoque=203), total=120.00>')
-
-        self.assertQuerysetEqual(list(itens), queryset_dos_itens)
-
-    def test_deve_retornar_produtos_que_atingiram_o_estoque_minimo(self):
-
-        livro = Produto.objects.create(**fixture_produto_livro)
-        cliente = Cliente.objects.create(**fixture_cliente)
+    def test_deve_criar_uma_venda_corretamente(self):
 
         venda = Venda.objects.create(
             data_venda=date.today(),
             valor_total=0,
-            codigo_cliente=cliente)
+            codigo_cliente=self.cliente
+        )
+
+        self.assertEquals(1, venda.codigo_venda)
+
+    def test_deve_criar_uma_venda_inserindo_seus_itens(self):
+
+        produto_livro = Produto.objects.create(**fixture_produto_livro)
+        produto_cd = Produto.objects.create(**fixture_produto_cd)
+
+        venda = Venda.objects.create(
+            data_venda=date.today(),
+            valor_total=0,
+            codigo_cliente=self.cliente
+        )
 
         item_livro = ItemVenda.objects.create(
             codigo_venda=venda,
-            codigo_produto=livro,
-            preco_unitario=20,
-            quantidade=90)
+            codigo_produto=produto_livro,
+            preco_unitario=25.0,
+            quantidade=2
+        )
 
-        produtos_min_estoque = Produto.objects.filter(quantidade__lte=F("min_quantidade") )
+        item_cd = ItemVenda.objects.create(
+            codigo_venda=venda,
+            codigo_produto=produto_cd,
+            preco_unitario=50.0,
+            quantidade=10
+        )
 
-        produtos_retornados = ['<Produto: nome=Não conte à ninguém, estoque=10>']
+        quantidade_itens_venda = ItemVenda.objects.filter(
+            codigo_venda=venda).count()
 
-        self.assertQuerysetEqual(list(produtos_min_estoque),produtos_retornados)
+
+        self.assertEquals(quantidade_itens_venda, 2)
+
+        venda.refresh_from_db()
+        self.assertEquals(550, venda.valor_total)
