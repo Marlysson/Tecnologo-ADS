@@ -28,7 +28,7 @@ class Cliente(models.Model):
         db_table = 'cliente'
 
     def __repr__(self):
-        return "Cliente ({} , {})".format(self.cpf, self.nome)
+        return "{}, {}".format(self.cpf, self.nome)
 
 
 class Fornecedor(models.Model):
@@ -69,7 +69,7 @@ class Pedido(models.Model):
         db_table = 'pedido'
 
     def __str__(self):
-        return "Pedido ( id={} , data={}, preco_total={} )".format(self.codigo_venda, date.strftime(self.data_pedido, "%d/%m/%Y"), self.preco_total)
+        return "data={}, preco_total={}".format(self.codigo_venda, date.strftime(self.data_pedido, "%d/%m/%Y"), self.preco_total)
 
 
 class Produto(models.Model):
@@ -83,7 +83,7 @@ class Produto(models.Model):
         db_table = 'produto'
 
     def __str__(self):
-        return "Produto ( {},{} )".format(self.nome_produto, self.quantidade)
+        return "nome={}, estoque={}".format(self.nome_produto, self.quantidade)
 
 
 class Venda(models.Model):
@@ -97,7 +97,7 @@ class Venda(models.Model):
         db_table = 'venda'
 
     def __str__(self):
-        return "Venda ( id={} , data={}, preco_total={} )".format(self.codigo_venda, date.strftime(self.data_venda, "%d/%m/%Y"), self.valor_total)
+        return "data={}, preco_total={}".format(self.codigo_venda, date.strftime(self.data_venda, "%d/%m/%Y"), self.valor_total)
 
 
 class ItemVenda(models.Model):
@@ -122,12 +122,12 @@ class ItemVenda(models.Model):
         super(ItemVenda, self).save(*args, **kwargs)
 
     def __str__(self):
-        return "ItemVenda ( {}, {} )".format(self.codigo_produto, self.preco_unitario, self.quantidade)
+        return "{}, {}".format(self.codigo_produto, self.preco_unitario, self.quantidade)
 
 
 class ItemPedido(models.Model):
 
-    codigo_pedido = models.ForeignKey(Pedido, related_name="itens_pedidos")
+    codigo_pedido = models.ForeignKey(Pedido, related_name="itens")
     codigo_produto = models.ForeignKey(Produto, related_name="itens_produto")
     preco_unitario = models.DecimalField(max_digits=10, decimal_places=2)
     quantidade = models.IntegerField()
@@ -146,4 +146,4 @@ class ItemPedido(models.Model):
         db_table = 'item_pedido'
 
     def __str__(self):
-        return "ItemPedido ( {}, {} )".format(self.codigo_produto, self.preco_unitario*self.quantidade)
+        return "Produto=({}), total={}".format(self.codigo_produto, self.preco_unitario*self.quantidade)
