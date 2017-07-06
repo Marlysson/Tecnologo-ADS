@@ -1,0 +1,6 @@
+
+<ul>
+{% for questao in questoes%}
+	<li><a href="{% url 'detalhar' questao.id %}">{{questao.question_text}}</a></li>
+{% endfor%}
+</ul>
