@@ -1,6 +1,37 @@
+{% extends 'base.html' %}
 
-<ul>
-{% for questao in questoes%}
-	<li><a href="{% url 'detalhar' questao.id %}">{{questao.question_text}}</a></li>
-{% endfor%}
-</ul>
+{% block conteudo %}
+<div class="panel panel-primary">
+	
+	<div class="panel-heading">Questões</div>
+
+	<table class="table">
+		<thead>
+			<tr>
+				<td>Número</td>
+				<td>Questão</td>
+				<td>Publicado em</td>
+				<td>Ações</td>
+			</tr>
+		</thead>
+		<tbody>
+		{% for questao in questoes %}
+			<tr>
+				
+
+					<td>{{ questao.id}} </td>
+					<td>{{questao.question_text}}</td>
+					<td>{{questao.pub_date}}</td>
+					<td>
+						<a href="{% url 'detalhar' questao.id %}">Acessar</a>
+					</td>
+			</tr>
+			{% empty %}
+				 Não há questões
+			{% endfor %}
+
+		</tbody>
+	</table>
+</div>
+
+{% endblock %}
