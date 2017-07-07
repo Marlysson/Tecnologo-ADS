@@ -7,7 +7,7 @@
 
 	<form method="post" action="{% url 'votar' questao.id %}">
 	 	{% csrf_token %}
-	 	
+
 		<div class="list-group">
 
 			{% for opcao in opcoes %}
@@ -27,11 +27,46 @@
 				
 			{% endfor %}
 
-			<input type="submit" value="Votar" class="btn btn-primary">
+			<input type="submit" value="Votar" class="btn btn-success">
 
 		</div>
+
+
 	</form>
 
-	<a class="btn btn-success">Ver o Resultado</a>
+	<button class="btn btn-primary btn-result">Ver o Resultado</button>
 
+	<div class="row col-lg-6">
+		<div class="results">
+			{% for opcao in opcoes %}
+
+				<span>{{opcao.choice_text|capfirst}}</span><div class="progress">
+	  				<div class="progress-bar" aria-valuemin="0" aria-valuemax="100" id="{{opcao.choice_text}}">
+	  				</div>
+				</div>
+
+			{% endfor %}
+
+		</div>
+	</div>
+
+{% endblock %}
+
+{% block scripts%}
+<script type="text/javascript">
+	
+	$.ajax({
+		url:"/question/{{questao.id}}/results",
+		success:function(data){
+			for(var chave in data){
+				porcentagem = data[chave]+"%";
+
+				elemento = document.querySelector("#"+chave);
+				elemento.style.width = porcentagem;
+				elemento.textContent = parseFloat(data[chave]).toFixed(2)+"%";
+			}
+		}
+	});
+
+</script>
 {% endblock %}

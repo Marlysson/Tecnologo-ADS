@@ -38,7 +38,9 @@ def results(request,question_id):
 		if opcao.votes == 0:
 			resultados[opcao.choice_text] = 0
 		else:
-			resultado = (opcao.votes / total_votos) * 100
+			resultado = (opcao.votes / float(total_votos)) * 100
 			resultados[opcao.choice_text] = resultado
 
+	print(resultados)
+	
 	return JsonResponse(resultados)

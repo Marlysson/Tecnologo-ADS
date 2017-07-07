@@ -27,3 +27,16 @@ input[type=radio]{
 .option_active{
 	background:#ecf0f1;
 }
+
+.results{
+	display:none;
+}
+
+.activate-results{
+	display:block;
+}
+
+.btn-result{
+	display:block;
+	margin-bottom:15px;
+}
