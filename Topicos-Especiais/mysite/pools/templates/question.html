@@ -5,7 +5,7 @@
 	<h3 class="title-question">{{questao.question_text}}</h3>
 
 
-	<form method="post" action="{% url 'votar' questao.id %}">
+	<form method="post">
 	 	{% csrf_token %}
 
 		<div class="list-group">
@@ -27,20 +27,22 @@
 				
 			{% endfor %}
 
-			<input type="submit" value="Votar" class="btn btn-success">
+			<input type="submit" value="Votar" class="btn btn-success btn_vote">
 
 		</div>
 
 
 	</form>
 
-	<button class="btn btn-primary btn-result">Ver o Resultado</button>
 
-	<div class="row col-lg-6">
-		<div class="results">
+	<div class="row col-lg-12">
+		<button class="btn btn-primary btn-result pull-left">Ver o Resultado</button>
+
+		<div class="results col-lg-5 pull-right">
 			{% for opcao in opcoes %}
 
-				<span>{{opcao.choice_text|capfirst}}</span><div class="progress">
+				<span>{{opcao.choice_text|capfirst}} - ({{opcao.votes}})</span>
+				<div class="progress">
 	  				<div class="progress-bar" aria-valuemin="0" aria-valuemax="100" id="{{opcao.choice_text}}">
 	  				</div>
 				</div>
@@ -53,6 +55,7 @@
 {% endblock %}
 
 {% block scripts%}
+
 <script type="text/javascript">
 	
 	$.ajax({
@@ -63,10 +66,63 @@
 
 				elemento = document.querySelector("#"+chave);
 				elemento.style.width = porcentagem;
-				elemento.textContent = parseFloat(data[chave]).toFixed(2)+"%";
+				elemento.textContent = parseFloat(data[chave]).toFixed(1)+"%";
 			}
 		}
 	});
+
+	btn_vote = document.querySelector(".btn_vote");
+
+	btn_vote.addEventListener("click",function(event){
+		
+		event.preventDefault();
+
+		checkboxes = document.querySelectorAll("input[name='opcao']");
+
+		marcados = Array.prototype.filter.call(checkboxes,function(item){
+			return item.checked == true;
+		});
+
+		if(marcados.length > 0){
+			valor_escolhido = marcados[0].value;
+
+			$.ajax({
+				url:"/question/{{questao.id}}/vote",
+				type:"POST",
+				data: {
+					"opcao":valor_escolhido,
+					csrfmiddlewaretoken: '{{ csrf_token }}'
+				}
+			}).done(function(data){
+				console.log(data.ok)
+				if(data.ok){
+					
+					iziToast.success({
+						timeout:1500,
+	    				title: 'Votado',
+	    				message: 'Voto computado com sucesso!',
+	    				position:"topRight"
+					});
+
+					setTimeout(function(){
+						window.location = "{% url 'detalhar' questao.id %}";
+					},3000)
+				}
+			});
+
+		}else{
+
+			iziToast.error({
+				timeout:1500,
+				title: 'Erro',
+				message: 'Escolha ao menos 1 opção',
+				position:"topRight"
+			});
+
+		}
+
+	})
+	
 
 </script>
 {% endblock %}

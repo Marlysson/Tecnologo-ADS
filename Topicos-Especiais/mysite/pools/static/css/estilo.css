@@ -40,3 +40,8 @@ input[type=radio]{
 	display:block;
 	margin-bottom:15px;
 }
+
+
+.progress{
+	border:1px solid #ccc !important;
+}

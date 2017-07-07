@@ -18,12 +18,17 @@ def votar(request,question_id):
 
 	escolhido = request.POST['opcao']
 
-	opcao = Choice.objects.get(id=escolhido)
-	opcao.votes += 1
+	tudo_ok = True
 
-	opcao.save()
+	try:
+		opcao = Choice.objects.get(id=escolhido)
+		opcao.votes += 1
+		opcao.save()
+	except:
+		tudo_ok = False
 
-	return redirect(reverse("detalhar",args=[question_id]))
+
+	return JsonResponse({"ok":tudo_ok})
 
 
 def results(request,question_id):
