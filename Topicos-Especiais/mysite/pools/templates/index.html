@@ -3,35 +3,41 @@
 {% block conteudo %}
 <div class="panel panel-primary">
 	
-	<div class="panel-heading">Questões</div>
+	<div class="panel-heading">
+		<p class="panel-title">Questões</p>
+	</div>
 
-	<table class="table">
+	<div class="panel-body">
+	<table class="table table-striped">
+
 		<thead>
 			<tr>
-				<td>Número</td>
-				<td>Questão</td>
-				<td>Publicado em</td>
-				<td>Ações</td>
+				<td><strong>Questão</strong></td>
+				<td><strong>Publicado em</strong></td>
+				<td><strong>Ações</strong></td>
 			</tr>
 		</thead>
-		<tbody>
-		{% for questao in questoes %}
-			<tr>
-				
 
-					<td>{{ questao.id}} </td>
-					<td>{{questao.question_text}}</td>
-					<td>{{questao.pub_date}}</td>
-					<td>
-						<a href="{% url 'detalhar' questao.id %}">Acessar</a>
-					</td>
+		<tbody>
+
+		{% for questao in questoes %}
+			
+			<tr>				
+				<td>{{questao.question_text}}</td>
+				<td>{{questao.pub_date|date:'d/m/Y'}}</td>
+				<td>
+					<a href="{% url 'detalhar' questao.id %}">Acessar</a>
+				</td>
 			</tr>
-			{% empty %}
-				 Não há questões
-			{% endfor %}
+
+		{% empty %}
+			Não há questões
+		{% endfor %}
 
 		</tbody>
+
 	</table>
+	</div>
 </div>
 
 {% endblock %}

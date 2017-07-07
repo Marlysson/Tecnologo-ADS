@@ -1,0 +1,29 @@
+.header{
+	margin-bottom:15px;
+	border-bottom:1px solid #000;
+}
+
+.title-question{
+	margin-bottom:25px;
+}
+
+.options-group{
+	margin-bottom:15px;
+}
+.options-group a{
+	text-decoration:none;
+}
+
+.option-text{
+	margin-left:10px;
+	display:inline-block;
+}
+
+input[type=radio]{
+	display:none;
+}
+
+
+.option_active{
+	background:#ecf0f1;
+}

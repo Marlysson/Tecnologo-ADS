@@ -1,2 +1,37 @@
-{{ questao.question_text}}
-{{ questao.pub_date}}
+{% extends 'base.html' %}
+
+{% block conteudo %}
+
+	<h3 class="title-question">{{questao.question_text}}</h3>
+
+
+	<form method="post" action="{% url 'votar' questao.id %}">
+	 	{% csrf_token %}
+	 	
+		<div class="list-group">
+
+			{% for opcao in opcoes %}
+
+				<li href="" class="list-group-item options-group">
+
+					<label class="btn btn-primary option_item" for="{{opcao.id}}">
+						<span class="glyphicon glyphicon-ok"></span> 
+						<input type="radio" name="opcao" value="{{opcao.id}}" id="{{opcao.id}}">
+					</label>
+
+					<h4 class="option-text">{{opcao.choice_text}}</h4>
+				</li>
+
+			{% empty %}
+				Não há opções ainda
+				
+			{% endfor %}
+
+			<input type="submit" value="Votar" class="btn btn-primary">
+
+		</div>
+	</form>
+
+	<a class="btn btn-success">Ver o Resultado</a>
+
+{% endblock %}
