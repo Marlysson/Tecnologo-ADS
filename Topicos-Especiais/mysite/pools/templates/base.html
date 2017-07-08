@@ -1,14 +1,20 @@
 {% load staticfiles %}
+
 <!DOCTYPE html>
 <html>
 <head>
 	<title>Polls App</title>
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 	<link rel="stylesheet" type="text/css" href="{% static 'css/estilo.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'css/toast.css' %}">
 </head>
 <body>
 
-<div class="row col-lg-8 col-lg-offset-2">
+<div class="container-fluid
+				col-lg-8 col-lg-offset-2
+				col-md-8 col-md-offset-2
+				col-sm-10 col-sm-offset-1
+				col-xs-10 col-xs-offset-1">
 
 	<div class="header">
 		<h1><a href="{% url 'index' %}">PollsApp</a></h1>
@@ -19,13 +25,11 @@
 
 </div>
 
-<script type="text/javascript" src="{% static 'js/highlight_option.js' %}"></script>
-<script type="text/javascript" src="{% static 'js/show_results.js' %}"></script>
 <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-<link rel="stylesheet" type="text/css" href="{% static 'css/toast.css' %}">
 <script type="text/javascript" src="{% static 'js/toast.js' %}"></script>
 
 {% block scripts %}
+
 {% endblock %}
 
 </body>

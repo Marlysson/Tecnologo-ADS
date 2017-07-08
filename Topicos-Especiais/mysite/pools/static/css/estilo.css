@@ -3,6 +3,17 @@
 	border-bottom:1px solid #000;
 }
 
+.header-question{
+	display:flex;
+	align-items: center;
+}
+
+.options_question{
+	display:flex;
+	flex-direction:row;
+	justify-content: space-around;
+}
+
 .title-question{
 	margin-bottom:25px;
 }
@@ -17,6 +28,11 @@
 .option-text{
 	margin-left:10px;
 	display:inline-block;
+}
+
+.options{
+	display:flex;
+	justify-content: space-around;
 }
 
 input[type=radio]{
@@ -44,4 +60,8 @@ input[type=radio]{
 
 .progress{
 	border:1px solid #ccc !important;
+}
+
+.panel-body{
+	padding-bottom:0 !important;
 }

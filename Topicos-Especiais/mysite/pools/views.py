@@ -1,12 +1,16 @@
-from django.shortcuts import render,redirect,reverse
-from django.http import JsonResponse
+from django.shortcuts import render,redirect,reverse,get_object_or_404
+from django.http import HttpResponse, JsonResponse
 
 from .models import Question, Choice
 
 def index(request):
-	questoes = Question.objects.order_by("-pub_date")
 
-	return render(request,"index.html",{"questoes":questoes})
+	questoes_fechadas = Question.objects.filter(closed=True).order_by("-pub_date")
+	questoes_abertas = Question.objects.filter(closed=False).order_by("-pub_date")
+
+	contexto = {"abertas":questoes_abertas,"fechadas":questoes_fechadas}
+
+	return render(request,"index.html",contexto)
 
 def detalhe(request,question_id):
 	questao = Question.objects.get(id=question_id)
@@ -14,11 +18,9 @@ def detalhe(request,question_id):
 
 	return render(request,"question.html",{"questao":questao,"opcoes":opcoes})
 
-def votar(request,question_id):
+def votar(request):
 
 	escolhido = request.POST['opcao']
-
-	tudo_ok = True
 
 	try:
 		opcao = Choice.objects.get(id=escolhido)
@@ -28,7 +30,7 @@ def votar(request,question_id):
 		tudo_ok = False
 
 
-	return JsonResponse({"ok":tudo_ok})
+	return HttpResponse(status=200)
 
 
 def results(request,question_id):
@@ -45,7 +47,40 @@ def results(request,question_id):
 		else:
 			resultado = (opcao.votes / float(total_votos)) * 100
 			resultados[opcao.choice_text] = resultado
-
-	print(resultados)
 	
 	return JsonResponse(resultados)
+
+def administrar(request,question_id):
+
+	questao = Question.objects.get(id=question_id)
+	opcoes = questao.opcoes.all()
+
+	return render(request,"manage_question.html",{"questao":questao,"opcoes":opcoes})
+
+def change_status(request):
+
+	questao = request.POST["questao"]
+
+	try:
+		questao = Question.objects.get(id=questao)
+		questao.toggle_status()
+
+		return HttpResponse(status=200)
+	except:
+		return HttpResponse(status=404)
+
+
+def remover_opcao(request):
+
+	option_id = request.POST["opcao"]
+
+	try:
+
+		opcao = Choice.objects.get(id=option_id)
+		opcao.resetar()
+
+		return HttpResponse(status=200)
+
+	except Exception as e:
+		return HttpResponse(status=404)
+

@@ -6,6 +6,10 @@ class Question(models.Model):
 	closed = models.BooleanField(default=False)
 	pub_date = models.DateField(auto_now_add=True)
 
+	def toggle_status(self):
+		self.closed = not self.closed
+		self.save()
+
 	def __str__(self):
 		return self.question_text
 
@@ -14,6 +18,12 @@ class Choice(models.Model):
 	question = models.ForeignKey(Question,null=True,related_name="opcoes")
 	choice_text = models.CharField(max_length=50)
 	votes = models.IntegerField(default=0)
+
+	def resetar(self):
+		self.question = None
+		self.votes = 0
+
+		self.save()
 
 	def __str__(self):
 		return self.choice_text

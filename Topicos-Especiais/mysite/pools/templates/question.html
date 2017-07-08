@@ -1,128 +1,159 @@
 {% extends 'base.html' %}
+{% load staticfiles %}
 
 {% block conteudo %}
 
-	<h3 class="title-question">{{questao.question_text}}</h3>
+    <h3 class="title-question">
+        {{questao.question_text}}
+
+        {% if questao.closed %}
+            <button class="btn btn-danger btn-xs" disabled="disabled">
+                <span class="glyphicon glyphicon-ban-circle"></span>
+                Fechada
+            </button>
+        {% else %}
+            <button class="btn btn-success btn-xs" disabled="disabled">
+                <span class="glyphicon glyphicon-ban-circle"></span>
+                Aberta
+            </button>
+        {% endif %}
+
+    </h3>
+
+        <form method="post">
+            {% csrf_token %}
+
+            <div class="list-group">
+
+                {% for opcao in opcoes %}
+
+                    <li href="" class="list-group-item options-group">
+
+                        <label class="btn btn-primary option_item" for="{{opcao.id}}">
+                            <span class="glyphicon glyphicon-ok"></span> 
+                            <input type="radio" name="opcao" value="{{opcao.id}}" id="{{opcao.id}}">
+                        </label>
+
+                        <h4 class="option-text">{{opcao.choice_text}}</h4>
+                    </li>
+
+                {% empty %}
+
+                    Não há opções ainda
+                    
+                {% endfor %}
+
+                {% if not questao.closed and opcoes.count > 0 %}
+                    <input type="submit" value="Votar" class="btn btn-success btn_vote">
+                {% endif%}
+
+            </div>
 
 
-	<form method="post">
-	 	{% csrf_token %}
+        </form>
 
-		<div class="list-group">
+    {% if opcoes.count > 0 %}
+        <div class="row col-lg-12">
+            <button class="btn btn-primary btn-result pull-left">Ver o Resultado</button>
 
-			{% for opcao in opcoes %}
+            <div class="results col-lg-5 pull-right">
+                {% for opcao in opcoes %}
 
-				<li href="" class="list-group-item options-group">
+                    <span>{{opcao.choice_text|capfirst}} - ({{opcao.votes}})</span>
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-striped" aria-valuemin="0" aria-valuemax="100" id="{{opcao.choice_text}}">
+                        </div>
+                    </div>
 
-					<label class="btn btn-primary option_item" for="{{opcao.id}}">
-						<span class="glyphicon glyphicon-ok"></span> 
-						<input type="radio" name="opcao" value="{{opcao.id}}" id="{{opcao.id}}">
-					</label>
+                {% endfor %}
 
-					<h4 class="option-text">{{opcao.choice_text}}</h4>
-				</li>
+            </div>
 
-			{% empty %}
-				Não há opções ainda
-				
-			{% endfor %}
+        </div>
 
-			<input type="submit" value="Votar" class="btn btn-success btn_vote">
-
-		</div>
-
-
-	</form>
-
-
-	<div class="row col-lg-12">
-		<button class="btn btn-primary btn-result pull-left">Ver o Resultado</button>
-
-		<div class="results col-lg-5 pull-right">
-			{% for opcao in opcoes %}
-
-				<span>{{opcao.choice_text|capfirst}} - ({{opcao.votes}})</span>
-				<div class="progress">
-	  				<div class="progress-bar" aria-valuemin="0" aria-valuemax="100" id="{{opcao.choice_text}}">
-	  				</div>
-				</div>
-
-			{% endfor %}
-
-		</div>
-	</div>
+    {% endif %}
 
 {% endblock %}
 
-{% block scripts%}
+{% block scripts %}
+
+<script type="text/javascript" src="{% static 'js/show_results.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/highlight_option.js' %}"></script>
 
 <script type="text/javascript">
-	
-	$.ajax({
-		url:"/question/{{questao.id}}/results",
-		success:function(data){
-			for(var chave in data){
-				porcentagem = data[chave]+"%";
+    
+    $.ajax({
+        url:"{% url 'resultados' questao.id %}",
+        success:function(data){
 
-				elemento = document.querySelector("#"+chave);
-				elemento.style.width = porcentagem;
-				elemento.textContent = parseFloat(data[chave]).toFixed(1)+"%";
-			}
-		}
-	});
+            for(var chave in data){
+                porcentagem = data[chave]+"%";
 
-	btn_vote = document.querySelector(".btn_vote");
+                elemento = document.querySelector("#"+chave);
+                elemento.style.width = porcentagem;
+                elemento.textContent = parseFloat(data[chave]).toFixed(1)+"%";
+            }
+        }
+    });
 
-	btn_vote.addEventListener("click",function(event){
-		
-		event.preventDefault();
+    btn_vote = document.querySelector(".btn_vote");
 
-		checkboxes = document.querySelectorAll("input[name='opcao']");
+    btn_vote.addEventListener("click",function(event){
+        
+        event.preventDefault();
 
-		marcados = Array.prototype.filter.call(checkboxes,function(item){
-			return item.checked == true;
-		});
+        existe_checkbox_marcado = document.querySelector("input[name='opcao']:checked");
 
-		if(marcados.length > 0){
-			valor_escolhido = marcados[0].value;
+        if( existe_checkbox_marcado != null ){
 
-			$.ajax({
-				url:"/question/{{questao.id}}/vote",
-				type:"POST",
-				data: {
-					"opcao":valor_escolhido,
-					csrfmiddlewaretoken: '{{ csrf_token }}'
-				}
-			}).done(function(data){
-				console.log(data.ok)
-				if(data.ok){
-					
-					iziToast.success({
-						timeout:1500,
-	    				title: 'Votado',
-	    				message: 'Voto computado com sucesso!',
-	    				position:"topRight"
-					});
+            opcao_escolhida = existe_checkbox_marcado.value;
 
-					setTimeout(function(){
-						window.location = "{% url 'detalhar' questao.id %}";
-					},3000)
-				}
-			});
+            $.post({
+                url:"{% url 'votar' %}",
+                data:{
+                    opcao:opcao_escolhida,
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                }   
 
-		}else{
+            }).done(function(data){
 
-			iziToast.error({
-				timeout:1500,
-				title: 'Erro',
-				message: 'Escolha ao menos 1 opção',
-				position:"topRight"
-			});
+                    iziToast.success({
+                        timeout:1000,
+                        title: 'Votado',
+                        message: 'Voto computado com sucesso!',
+                        position:"topRight"
+                    });
 
-		}
+                    setTimeout(function(){
+                        window.location = "{% url 'detalhar' questao.id %}";
+                    },2500)
 
-	})
-	
+                    
+            }).fail(function(data){
+
+                iziToast.error({
+                    timeout:1500,
+                    title: 'Erro',
+                    message: 'Ocorreu um erro. Tente novamente.',
+                    position:"topRight"
+                });
+
+            });
+
+        }else{
+
+            iziToast.error({
+                timeout:1500,
+                title: 'Erro',
+                message: 'Escolha 1 opção',
+                position:"topRight"
+            });
+
+        }
+
+    })
+    
 
 </script>
+
 {% endblock %}
