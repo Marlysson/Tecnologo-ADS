@@ -9,13 +9,13 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('pools', '0003_choice'),
+        ('polls', '0003_choice'),
     ]
 
     operations = [
         migrations.AlterField(
             model_name='choice',
             name='question',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='opcoes', to='pools.Question'),
+            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='opcoes', to='polls.Question'),
         ),
     ]

@@ -12,11 +12,18 @@ def index(request):
 
 	return render(request,"index.html",contexto)
 
-def detalhe(request,question_id):
+def questao(request,question_id):
+
 	questao = Question.objects.get(id=question_id)
 	opcoes = questao.opcoes.all()
 
 	return render(request,"question.html",{"questao":questao,"opcoes":opcoes})
+		
+def remover_questao(request,question_id):
+
+	questao = Question.objects.get(id=question_id)
+	questao.delete()
+	
 
 def votar(request):
 
@@ -42,11 +49,14 @@ def results(request,question_id):
 	resultados = {}
 
 	for opcao in opcoes:
+
+		nome = opcao.choice_text.lower().replace(" ","")
+
 		if opcao.votes == 0:
-			resultados[opcao.choice_text] = 0
+			resultados[nome] = 0
 		else:
 			resultado = (opcao.votes / float(total_votos)) * 100
-			resultados[opcao.choice_text] = resultado
+			resultados[nome] = resultado
 	
 	return JsonResponse(resultados)
 
@@ -55,7 +65,15 @@ def administrar(request,question_id):
 	questao = Question.objects.get(id=question_id)
 	opcoes = questao.opcoes.all()
 
-	return render(request,"manage_question.html",{"questao":questao,"opcoes":opcoes})
+	opcoes_avulsas = Choice.objects.filter(question=None)
+
+	contexto = {
+		"questao":questao,
+		"opcoes":opcoes,
+		"opcoes_avulsas":opcoes_avulsas
+	}
+
+	return render(request,"manage_question.html",contexto)
 
 def change_status(request):
 
@@ -63,7 +81,7 @@ def change_status(request):
 
 	try:
 		questao = Question.objects.get(id=questao)
-		questao.toggle_status()
+		questao.mudar_status()
 
 		return HttpResponse(status=200)
 	except:
@@ -84,3 +102,34 @@ def remover_opcao(request):
 	except Exception as e:
 		return HttpResponse(status=404)
 
+
+def criar_opcao(request):
+
+	nome_opcao = request.POST["name_option"]
+	id_questao = request.POST["questao"]
+
+	try:
+
+		questao = Question.objects.get(id=id_questao)
+
+		opcao = Choice(choice_text=nome_opcao)
+		opcao.associarPara(questao)
+
+		dado = JsonResponse({"name":opcao.choice_text,"id":opcao.id})
+
+		return HttpResponse(dado,content_type="text/json",status=200)
+	except:
+		return HttpResponse(status=404)
+
+def associar_opcao(request,question_id):
+
+	opcoes_selecionadas = request.POST.getlist("opcao")
+	opcoes_selecionadas = list(map(int,opcoes_selecionadas))
+
+	questao = Question.objects.get(id=question_id)
+
+	for id_opcao in opcoes_selecionadas:
+		opcao = Choice.objects.get(id=id_opcao)
+		opcao.associarPara(questao)
+
+	return redirect(reverse("administrar",args=[questao.id]))

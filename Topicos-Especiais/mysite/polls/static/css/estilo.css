@@ -35,10 +35,9 @@
 	justify-content: space-around;
 }
 
-input[type=radio]{
+input[type=radio], input[type=checkbox]{
 	display:none;
 }
-
 
 .option_active{
 	background:#ecf0f1;
@@ -64,4 +63,35 @@ input[type=radio]{
 
 .panel-body{
 	padding-bottom:0 !important;
+}
+
+.custom-list{
+	margin-top:50px;
+	text-align:left;
+	padding:0;
+}
+
+.list-inline{
+	display:inline-block;
+	border:1px solid #ccc;
+	padding:8px 10px;
+	margin-right:15px;
+	margin-bottom:15px;
+}
+
+.btn_block{
+	display:block;
+}
+
+.input-group-custom{
+	display:flex;
+	align-items: center;
+}
+
+.form-choices{
+	display:none;
+}
+
+.form-active{
+	display:block;
 }

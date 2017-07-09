@@ -8,7 +8,7 @@
 	</div>
 
 	<div class="panel-body">
-		<table class="table table-striped">
+		<table class="table">
 
 			{% if abertas.count > 0 %}
 			<thead>
@@ -28,7 +28,7 @@
 					<td>{{questao.question_text}}</td>
 					<td>{{questao.pub_date|date:'d/m/Y'}}</td>
 					<td class="options">
-						<a href="{% url 'detalhar' questao.id %}" 
+						<a href="{% url 'questao' questao.id %}" 
 							class="btn btn-success btn-xs">Acessar</a>
 
 						<a href="{% url 'administrar' questao.id %}" 
@@ -54,7 +54,7 @@
 	
 	<div class="panel-body">
 		{% if fechadas.count > 0 %}
-		<table class="table table-striped">
+		<table class="table">
 
 			<thead>
 				<tr>
@@ -73,7 +73,7 @@
 					<td>{{questao.pub_date|date:'d/m/Y'}}</td>
 					
 					<td class="options">
-						<a href="{% url 'detalhar' questao.id %}" 
+						<a href="{% url 'questao' questao.id %}" 
 							class="btn btn-success btn-xs">Acessar</a>
 
 						<a href="{% url 'administrar' questao.id %}" 

@@ -9,7 +9,7 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('pools', '0002_auto_20170706_1632'),
+        ('polls', '0002_auto_20170706_1632'),
     ]
 
     operations = [
@@ -19,7 +19,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('choice_text', models.CharField(max_length=50)),
                 ('votes', models.IntegerField()),
-                ('question', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='pools.Question')),
+                ('question', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='polls.Question')),
             ],
         ),
     ]

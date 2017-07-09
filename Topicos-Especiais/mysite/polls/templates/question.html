@@ -13,7 +13,7 @@
             </button>
         {% else %}
             <button class="btn btn-success btn-xs" disabled="disabled">
-                <span class="glyphicon glyphicon-ban-circle"></span>
+                <span class="glyphicon glyphicon-ok"></span>
                 Aberta
             </button>
         {% endif %}
@@ -27,9 +27,9 @@
 
                 {% for opcao in opcoes %}
 
-                    <li href="" class="list-group-item options-group">
+                    <li class="list-group-item options-group">
 
-                        <label class="btn btn-primary option_item" for="{{opcao.id}}">
+                        <label class="btn btn-primary btn-sm option_item" for="{{opcao.id}}">
                             <span class="glyphicon glyphicon-ok"></span> 
                             <input type="radio" name="opcao" value="{{opcao.id}}" id="{{opcao.id}}">
                         </label>
@@ -52,18 +52,20 @@
 
         </form>
 
-    {% if opcoes.count > 0 %}
+    {% if opcoes.count > 0 and questao.closed %}
         <div class="row col-lg-12">
             <button class="btn btn-primary btn-result pull-left">Ver o Resultado</button>
 
             <div class="results col-lg-5 pull-right">
                 {% for opcao in opcoes %}
+                    {% with  nome=opcao.choice_text|lower|cut:' ' %}
 
                     <span>{{opcao.choice_text|capfirst}} - ({{opcao.votes}})</span>
                     <div class="progress">
-                        <div class="progress-bar progress-bar-striped" aria-valuemin="0" aria-valuemax="100" id="{{opcao.choice_text}}">
+                        <div class="progress-bar progress-bar-striped" aria-valuemin="0" aria-valuemax="100" id="{{nome}}">
                         </div>
                     </div>
+                    {% endwith %}
 
                 {% endfor %}
 
@@ -78,7 +80,6 @@
 {% block scripts %}
 
 <script type="text/javascript" src="{% static 'js/show_results.js' %}"></script>
-<script type="text/javascript" src="{% static 'js/highlight_option.js' %}"></script>
 
 <script type="text/javascript">
     
@@ -98,60 +99,63 @@
 
     btn_vote = document.querySelector(".btn_vote");
 
-    btn_vote.addEventListener("click",function(event){
+    if (btn_vote != null){
         
-        event.preventDefault();
+        btn_vote.addEventListener("click",function(event){
+            
+            event.preventDefault();
 
-        existe_checkbox_marcado = document.querySelector("input[name='opcao']:checked");
+            existe_checkbox_marcado = document.querySelector("input[name='opcao']:checked");
 
-        if( existe_checkbox_marcado != null ){
+            if( existe_checkbox_marcado != null ){
 
-            opcao_escolhida = existe_checkbox_marcado.value;
+                opcao_escolhida = existe_checkbox_marcado.value;
 
-            $.post({
-                url:"{% url 'votar' %}",
-                data:{
-                    opcao:opcao_escolhida,
-                    csrfmiddlewaretoken: '{{ csrf_token }}'
-                }   
+                $.post({
+                    url:"{% url 'votar' %}",
+                    data:{
+                        opcao:opcao_escolhida,
+                        csrfmiddlewaretoken: '{{ csrf_token }}'
+                    }   
 
-            }).done(function(data){
+                }).done(function(data){
 
-                    iziToast.success({
-                        timeout:1000,
-                        title: 'Votado',
-                        message: 'Voto computado com sucesso!',
+                        iziToast.success({
+                            timeout:1000,
+                            title: 'Votado',
+                            message: 'Voto computado com sucesso!',
+                            position:"topRight"
+                        });
+
+                        setTimeout(function(){
+                            window.location = "{% url 'questao' questao.id %}";
+                        },2000)
+
+                        
+                }).fail(function(data){
+
+                    iziToast.error({
+                        timeout:1500,
+                        title: 'Erro',
+                        message: 'Ocorreu um erro. Tente novamente.',
                         position:"topRight"
                     });
 
-                    setTimeout(function(){
-                        window.location = "{% url 'detalhar' questao.id %}";
-                    },2500)
+                });
 
-                    
-            }).fail(function(data){
+            }else{
 
                 iziToast.error({
                     timeout:1500,
                     title: 'Erro',
-                    message: 'Ocorreu um erro. Tente novamente.',
+                    message: 'Escolha 1 opção',
                     position:"topRight"
                 });
 
-            });
+            }
 
-        }else{
-
-            iziToast.error({
-                timeout:1500,
-                title: 'Erro',
-                message: 'Escolha 1 opção',
-                position:"topRight"
-            });
-
-        }
-
-    })
+        })
+    }
     
 
 </script>

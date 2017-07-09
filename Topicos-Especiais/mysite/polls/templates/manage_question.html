@@ -1,0 +1,348 @@
+{% extends 'base.html' %}
+
+{% block conteudo %}
+    
+    <div class="row header-question">
+
+        <div class="col-lg-9 
+                    col-md-9">
+
+            <h3 class="title-question">
+                {{questao.question_text}}
+
+                {% if questao.closed %}
+                    <button class="btn btn-danger btn-xs" disabled="disabled">
+                        <span class="glyphicon glyphicon-ban-circle"></span>
+                        Fechada
+                    </button>
+                {% else %}
+                    <button class="btn btn-success btn-xs" disabled="disabled">
+                        <span class="glyphicon glyphicon-ok"></span>
+                        Aberta
+                    </button>
+                {% endif %}
+
+            </h3>
+        </div>
+
+        <div class="col-lg-3 
+                    col-md-3 options_question">
+
+            <button class="btn btn-default btn-sm toggle_status_question">
+                {% if questao.closed %}
+                    <strong>Abrir questão</strong>
+                {% else %}
+                    <strong>Fechar questão</strong>
+                {% endif %}
+            </button>
+
+                <div class="btn btn-danger btn-sm btn_deletar_questao">
+                    <strong>Excluir</strong>
+                </div>
+
+        </div>
+     
+    </div>
+    
+
+    <form method="post">
+
+        {% csrf_token %}
+
+            <div class="list-group list-option">
+
+                {% for opcao in opcoes %}
+
+                    <li class="list-group-item options-group">
+
+                        <h4 class="option-text">{{opcao.choice_text|capfirst}}</h4>
+                        
+                        (<strong>{{opcao.votes}} Voto{{opcao.votes|pluralize}}</strong>)
+
+                        <button class="btn btn-primary btn-sm pull-right btn_remove"
+                            id="{{opcao.id}}">
+                            <span class="glyphicon glyphicon-remove"></span>
+                        </button>
+
+                    </li>
+
+                    {% empty %}
+                        Não há opções ainda
+                    
+                {% endfor %}
+
+            </div>
+
+            <div class="row input-group-custom">
+                    
+                <div class="col-lg-5">
+                
+                    <div class="input-group">
+
+                        <input type="text" name="name_option" class="form-control" id="option_name" />
+
+                        <span class="input-group-btn">
+                            <button class="btn btn-primary btn-sm btn_add_option">
+                                <strong>CRIAR OPÇÃO</strong>
+                            </button> 
+
+                        </span>
+
+                    </div>
+
+                </div>  
+
+                {% if opcoes_avulsas.count > 0 %}
+                <button class="btn btn-primary btn-sm btn_associar">
+                    <strong>ASSOCIAR OPÇÕES</strong>
+                </button>
+                {% endif %}
+
+            </div>
+
+    </form>
+
+    <form method="post" action="{% url 'associar_opcao' questao.id %}" class="form-choices">
+        {% csrf_token %}
+
+        <ul class="custom-list">
+
+            <h3>Escolha suas opções</h3>
+
+            {% for opcao in opcoes_avulsas %}
+                
+                <li class="list-inline">
+                
+                    <label class="btn btn-primary btn-xs option_item" for="{{opcao.id}}">
+                        <span class="glyphicon glyphicon-ok"></span> 
+                        <input type="checkbox" name="opcao" value="{{opcao.id}}" id="{{opcao.id}}">
+                    </label>
+
+                    <strong>{{opcao.choice_text|capfirst}}</strong>
+                </li>
+                
+            {% endfor %}
+
+            <button type="submit" class="btn btn-primary btn-sm btn_block">
+                <strong>ASSOCIAR</strong>
+            </button>
+
+        </ul>
+    </form>
+    
+
+{% endblock %}
+
+{% block scripts %}
+
+    <script type="text/javascript">
+
+        //Tratamento da "exclusão" de uma opção
+
+        btns_exclude = document.querySelectorAll(".btn_remove");
+
+        btns_exclude.forEach(function(element,index){
+
+            element.addEventListener("click",function(event){
+
+                event.preventDefault();
+
+                valor_escolhido = parseInt(this.getAttribute("id"));
+
+                deletar_opcao = confirm("Deseja deletar a opção? ");
+
+                if (deletar_opcao == true){
+
+                    $.ajax({
+                        url:"{% url 'remover_opcao' %}",
+                        type:"POST",
+                        data:{
+                            opcao:valor_escolhido,
+                            csrfmiddlewaretoken: '{{ csrf_token }}'
+                        }
+
+                    }).done(function(data,statusText,request){
+
+                        if (request.status == 200){
+                            iziToast.success({
+                                timeout:1500,
+                                title: 'Removido',
+                                message: 'Opção removida com sucesso',
+                                position:"topRight"
+                            });
+                        
+                        element.parentNode.remove();
+
+                        setTimeout(function(){
+                            window.location = "{% url 'administrar' questao.id %}";
+                        },2000)
+
+                        }else{
+
+                            iziToast.error({
+                                timeout:1000,
+                                title: 'Erro',
+                                message: 'Ocorreu um erro. Tente novamente.',
+                                position:"topRight"
+                            });
+
+                        }
+
+                    });
+                }
+            });
+
+        });
+
+    </script>
+
+    <script type="text/javascript">
+        
+        //Tratar fechamento da questão
+
+        btn_toggle_status = document.querySelector(".toggle_status_question");
+
+        btn_toggle_status.addEventListener("click",function(event){
+
+            $.ajax({
+                url:"{% url 'change_status' %}",
+                type:"POST",
+                data:{
+                    questao:"{{ questao.id }}",
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                }
+
+            }).done(function(data){
+                window.location = "{% url 'administrar' questao.id %}";
+            });
+            
+        })
+
+    </script>
+
+<script type="text/javascript">
+    
+    //Tratar a criação de opção
+
+    btn_create = document.querySelector(".btn_add_option");
+    list_option = document.querySelector(".list-option");
+
+    btn_create.addEventListener("click",function(event){
+            
+        event.preventDefault();
+
+        input_option = document.querySelector("#option_name");
+
+        $.ajax({
+            url:"{% url 'criar_opcao' %}",
+            type:"POST",
+            data:{
+                name_option:input_option.value,
+                questao:"{{ questao.id }}",
+                csrfmiddlewaretoken: '{{ csrf_token }}'
+            }
+
+        }).done(function(data,statusText,request){
+            
+            input_option.value = "";
+
+            texto = data["name"];
+            id = data["id"];
+
+            list_option.innerHTML += createOption(texto,id);
+
+            iziToast.success({
+                timeout:1000,
+                title: 'Adicionado',
+                message: 'Opção criada com sucesso',
+                position:"topRight"
+            });
+
+            setTimeout(function(){
+                window.location = "{% url 'administrar' questao.id %}";
+            },2000)
+
+        });
+
+    });
+
+    function createOption(text,id){
+
+        content = "<li class='list-group-item options-group'>";
+        content += "<h4 class='option-text'>" + text + "</h4>";
+        content += " (<strong>0 Voto</strong>)";
+        content += "<button class='btn btn-primary btn-sm pull-right btn_remove' id='"+id+"'>";
+        content += "<span class='glyphicon glyphicon-remove'></span>";
+        content += "</button>"
+        content += "</li>";
+
+        return content
+    }
+
+
+    function createElement(type,texto,attributes){
+
+        elemento = document.createElement(type);
+
+        for(attribute in attributes){
+
+            valores = attributes[attribute];
+
+            if (Array.isArray(value_attribute)){
+                
+                valores = value_attribute.join(" ");
+
+            }
+
+            elemento.setAttribute(attribute,valores);
+
+        }
+
+        elemento.textContent = texto;
+
+        return elemento;
+
+    }
+
+</script>
+
+
+<script type="text/javascript">
+    
+    //Parte de associar opções á questão
+
+    btn_associar = document.querySelector(".btn_associar");
+    form_opcoes_avulsas = document.querySelector(".form-choices");
+
+    btn_associar.addEventListener("click",function(event){
+        event.preventDefault();
+        form_opcoes_avulsas.classList.toggle("form-active");
+    });
+
+</script>
+
+<script type="text/javascript">
+    
+    //Tratar exclusão da questão
+
+    btn_excluir = document.querySelector(".btn_deletar_questao")
+
+    btn_excluir.addEventListener("click",function(event){
+        event.preventDefault();
+
+        deletar = confirm("Deseja realmente deletar essa qestão? Com isso todas as opções serão reiniciadas");
+
+        if( deletar ){
+            $.ajax({
+                url:"{% url 'remover_questao' questao.id %}",
+                type:"POST",
+                data:{
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                }
+            }).done(function(data){
+                window.location = "{% url 'index' %}"
+            })
+        }
+    });
+</script>
+{% endblock %}
