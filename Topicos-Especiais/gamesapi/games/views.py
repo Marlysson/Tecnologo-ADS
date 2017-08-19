@@ -14,3 +14,14 @@ def game_list(request):
 		serializer_data = GameSerializer(games,many=True)
 
 		return Response(serializer_data.data)
+
+	if request.method == 'POST':
+
+		serializer = GameSerializer(data=request.data)
+
+		if serializer_data.is_valid():
+
+			serializer.save()
+			return Response(serializer.data,status=status.HTTP_201_CREATED)
+
+		return Response(serializer.data,status=status.HTTP_400_BAD_REQUEST)
