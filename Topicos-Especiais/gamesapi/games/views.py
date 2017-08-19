@@ -1,4 +1,4 @@
-
+from django.shortcuts import render
 from rest_framework.parsers import JSONParser
 from rest_framework import status
 from rest_framework.decorators import api_view
@@ -9,16 +9,8 @@ from .serializers import GameSerializer
 @api_view(["GET","POST"])
 def game_list(request):
 
-	def get():
+	if request.method == 'GET':
 		games = Game.objects.all()
 		serializer_data = GameSerializer(games,many=True)
 
 		return Response(serializer_data.data)
-
-
-	methods = {
-		"GET":get()
-	}
-
-
-	return methods[request.method]
