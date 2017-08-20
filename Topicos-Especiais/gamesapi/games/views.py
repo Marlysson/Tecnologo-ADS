@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404
 from rest_framework.parsers import JSONParser
 from rest_framework import status
 from rest_framework.decorators import api_view
@@ -19,9 +19,37 @@ def game_list(request):
 
 		serializer = GameSerializer(data=request.data)
 
-		if serializer_data.is_valid():
+		if serializer.is_valid():
 
 			serializer.save()
 			return Response(serializer.data,status=status.HTTP_201_CREATED)
 
 		return Response(serializer.data,status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(["GET","PUT","DELETE"])
+def game_detail(request,pk):
+
+	game = get_object_or_404(Game,pk=pk)
+
+	if request.method == 'GET':
+
+		serialized_game = GameSerializer(game)	
+
+		return Response(serialized_game.data)
+
+	elif request.method == 'PUT':
+
+		serialized_game = GameSerializer(game,data=request.data)
+
+		if serialized_game.is_valid():
+			serialized_game.save()
+
+			return Response(serialized_game.data)
+
+		return Response(serialized_game.errors, status=status.HTTP_400_BAD_REQUEST)
+
+	if request.method = 'DELETE':
+
+		game.delete()
+
+		return Response(status=status.HTTP_204_NO_CONTENT)
