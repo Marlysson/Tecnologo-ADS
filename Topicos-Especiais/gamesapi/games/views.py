@@ -1,4 +1,5 @@
 from django.shortcuts import get_object_or_404
+from django.utils import timezone
 from rest_framework.parsers import JSONParser
 from rest_framework import status
 from rest_framework.decorators import api_view
@@ -51,13 +52,14 @@ def game_detail(request,pk):
 	if request.method == 'DELETE':
 		
 		from datetime import datetime
-		today = datetime.today()
+
+		today = timezone.make_aware(datetime.now(), timezone.get_current_timezone())
 
 		game_is_launched = lambda date : date < today
 
 		if game_is_launched(game.release_date):
 			
-			return Response("Não permitido remover jogos ainda não lançados.",
+			return Response({"error":"Não permitido remover jogos ainda não lançados."},
 				status=status.HTTP_400_BAD_REQUEST)
 
 		game.delete()
