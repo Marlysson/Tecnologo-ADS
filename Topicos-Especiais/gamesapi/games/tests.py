@@ -13,7 +13,7 @@ class TestSerializer(TestCase):
         self.python_object_content = {
             "name":"GTA V",
             "release_date":datetime.now(),
-            "game_category":"Action/Adventure"
+            "game_category":"Action/Adventure",
         }
 
     def test_should_be_return_count_objects_created(self):
@@ -54,9 +54,8 @@ class TestApi(TestCase):
         self.api_resource = "games/{}/"
 
         self.default_content = {
-            "name":"Pro Evolution Soccer 2016",
             "release_date": datetime.now().isoformat(),
-            "game_category": "Futebol"
+            "game_category": "Action",
         }
 
     def test_resources_should_return_empty_when_havent_data(self):
@@ -75,19 +74,23 @@ class TestApi(TestCase):
 
     def test_should_return_object_created(self):
 
+        self.default_content["name"] = 'Overwatch'
+
         response = self.client.post(self.api_root,self.default_content)
 
         game = response.data
 
         self.assertEqual(201, response.status_code)
         self.assertEqual(1,game["id"])
-        self.assertEqual("Pro Evolution Soccer 2016", game["name"])
+        self.assertEqual("Overwatch", game["name"])
 
     def test_should_return_object_created_by_requests_library(self):
 
         import json
 
         url = "http://localhost:8000/games/"
+
+        self.default_content["name"] = 'Limbo'
 
         content = json.dumps(self.default_content)
 
@@ -100,4 +103,4 @@ class TestApi(TestCase):
         content = response.json()
 
         self.assertEqual(201,response.status_code)
-        self.assertEqual("Pro Evolution Soccer 2016X",content["name"])
+        self.assertEqual("Limbo",content["name"])

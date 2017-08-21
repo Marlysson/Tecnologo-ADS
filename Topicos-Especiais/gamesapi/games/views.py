@@ -24,7 +24,7 @@ def game_list(request):
 			serializer.save()
 			return Response(serializer.data,status=status.HTTP_201_CREATED)
 
-		return Response(serializer.data,status=status.HTTP_400_BAD_REQUEST)
+		return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(["GET","PUT","DELETE"])
 def game_detail(request,pk):
@@ -48,8 +48,20 @@ def game_detail(request,pk):
 
 		return Response(serialized_game.errors, status=status.HTTP_400_BAD_REQUEST)
 
-	if request.method = 'DELETE':
+	if request.method == 'DELETE':
+		
+		from datetime import datetime
+		today = datetime.today()
+
+		game_is_launched = lambda date : date < today
+
+		if game_is_launched(game.release_date):
+			
+			return Response("Não permitido remover jogos ainda não lançados.",
+				status=status.HTTP_400_BAD_REQUEST)
 
 		game.delete()
-
 		return Response(status=status.HTTP_204_NO_CONTENT)
+		
+
+		
